@@ -11,14 +11,6 @@ helperImage:
   repository: busybox
   tag: latest
 
-defaultSettings:
-  registrySecret: ~
-
-privateRegistry:
-  registryUrl: ~
-  registryUser: ~
-  registryPasswd: ~
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
