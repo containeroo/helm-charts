@@ -1,0 +1,20 @@
+apiVersion: v1
+entries:
+  local-path-provisioner:
+  - apiVersion: v1
+    appVersion: v0.0.17
+    created: "2020-09-05T18:31:48.099792+02:00"
+    description: Use HostPath for persistent local storage with Kubernetes
+    digest: 2cc51746cc92d758e2e562da6dab288e73c9ff63323b510b408ee6402c386dd8
+    home: https://github.com/rancher/local-path-provisioner
+    keywords:
+    - storage
+    - hostpath
+    kubeVersion: '>=1.12.0-r0'
+    name: local-path-provisioner
+    sources:
+    - https://github.com/rancher/local-path-provisioner.git
+    urls:
+    - https://github.com/containeroo/charts/releases/download/local-path-provisioner-0.0.17/local-path-provisioner-0.0.17.tgz
+    version: 0.0.17
+generated: "2020-09-05T18:31:47.883006+02:00"
