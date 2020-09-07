@@ -1,16 +1,11 @@
 # Containeroo Helm Charts
 
-This repository contains [Helm](https://helm.sh) charts for various projects
+This repository contains [Helm](https://helm.sh) charts for the following projects:
 
-* [local-path-provisioner](charts/local-path-provisioner/)
+* local-path-provisioner (created by Rancher)
 
-## Installing Charts from this Repository
+## Adding this Repository to Helm
 
-Add the Repository to Helm:
+Add the repository to Helm:
 
     helm repo add containeroo https://charts.containeroo.ch
-
-Install local-path-provisioner:
-
-    helm install containeroo/local-path-provisioner
-
