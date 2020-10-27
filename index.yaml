@@ -33,4 +33,24 @@ entries:
     urls:
     - https://github.com/containeroo/charts/releases/download/local-path-provisioner-0.0.17/local-path-provisioner-0.0.17.tgz
     version: 0.0.17
+  nfs-client-provisioner:
+  - apiVersion: v1
+    appVersion: 3.1.0
+    created: "2020-10-27T08:03:38.607575837Z"
+    description: nfs-client is an automatic provisioner that used your *already configured*
+      NFS server, automatically creating Persistent Volumes.
+    digest: ef86cb2bf4b912dbefd85d7ba26f27ca1cd2f2cd5d70152ffbbe10e11248e032
+    home: https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
+    keywords:
+    - nfs
+    - storage
+    maintainers:
+    - email: hello@containeroo.ch
+      name: containeroo
+    name: nfs-client-provisioner
+    sources:
+    - https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/nfs-client-provisioner-1.2.9/nfs-client-provisioner-1.2.9.tgz
+    version: 1.2.9
 generated: "2020-09-05T18:31:47.883006+02:00"
