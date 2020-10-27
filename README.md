@@ -3,6 +3,7 @@
 This repository contains [Helm](https://helm.sh) charts for the following projects:
 
 * local-path-provisioner (created by Rancher)
+* nfs-client-provisioner (created by Kubernetes SIG External Storage)
 
 ## Adding this Repository to Helm
 
