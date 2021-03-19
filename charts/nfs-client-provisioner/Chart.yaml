@@ -1,14 +1,12 @@
 apiVersion: v1
 appVersion: 3.1.0
-description: nfs-client is an automatic provisioner that used your *already configured* NFS server, automatically creating Persistent Volumes.
+deprecated: true
+description: "DEPRECATED: nfs-client is an automatic provisioner that used your *already configured* NFS server, automatically creating Persistent Volumes."
 name: nfs-client-provisioner
 home: https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
-version: 1.2.9
+version: 1.2.10
 sources:
 - https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
-maintainers:
-- name: containeroo
-  email: hello@containeroo.ch
 keywords:
 - nfs
 - storage
