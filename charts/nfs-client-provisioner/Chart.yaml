@@ -7,9 +7,7 @@ home: https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-c
 version: 1.2.10
 sources:
 - https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
-maintainers:
-- name: containeroo
-  email: hello@containeroo.ch
+maintainers: {}
 keywords:
 - nfs
 - storage
