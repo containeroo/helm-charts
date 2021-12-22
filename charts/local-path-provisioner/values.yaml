@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: rancher/local-path-provisioner
-  tag: v0.0.20
+  tag: v0.0.21
   pullPolicy: IfNotPresent
 
 helperImage:
@@ -139,7 +139,11 @@ configmap:
         image: busybox
         imagePullPolicy: IfNotPresent
 
+# Number of provisioner worker threads to call provision/delete simultaneously.
+# workerThreads: 4
 
+# Number of retries of failed volume provisioning. 0 means retry indefinitely.
+# provisioningRetryCount: 15
 
-
-
+# Number of retries of failed volume deletion. 0 means retry indefinitely.
+# deletionRetryCount: 15
