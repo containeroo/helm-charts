@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   cloudflare-operator:
   - apiVersion: v2
+    appVersion: 0.0.2
+    created: "2022-01-30T14:35:49.448426706Z"
+    description: Helm chart for Cloudflare Operator
+    digest: 218f2bf75c9d6dbef64339ced15f7614dc9c33b8fbf5e4f19657c342e466c753
+    name: cloudflare-operator
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-0.0.3/cloudflare-operator-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
     appVersion: 0.0.1
     created: "2022-01-30T14:19:50.254460141Z"
     description: Helm chart for Cloudflare Operator
