@@ -11,4 +11,6 @@ This repository contains [Helm](https://helm.sh) charts for the following projec
 
 Add the repository to Helm:
 
-    helm repo add containeroo https://charts.containeroo.ch
+```bash
+helm repo add containeroo https://charts.containeroo.ch
+```
