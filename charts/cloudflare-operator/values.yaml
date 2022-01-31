@@ -54,7 +54,7 @@ livenessProbe:
   enabled: true
 
 readinessProbe:
-  enabled: false
+  enabled: true
 
 nodeSelector: {}
 
