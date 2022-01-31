@@ -12,10 +12,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-rbac:
-  # Specifies whether to create the RBAC resources for cloudflare-operator
-  create: true
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

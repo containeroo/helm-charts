@@ -17,7 +17,6 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `image.tag`                  | `None`                                    | Overrides the image tag of chart `appVersion`        |
 | `image.pullSecret`           | `None`                                    | Image pull secret                                    |
 | `fullnameOverride`           | `None`                                    | Override the full name of resources                  |
-| `rbac.create`                | `true`                                    | If `true`, create and use RBAC resources             |
 | `serviceAccount.create`      | `true`                                    | If `true`, create a new service account              |
 | `serviceAccount.annotations` | `{}`                                      | Additional Service Account annotations               |
 | `serviceAccount.name`        | `cloudflare-operator`                     | Service account to be used                           |
