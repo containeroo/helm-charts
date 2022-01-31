@@ -34,6 +34,6 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `tolerations`                | `[]`                                      | Tolerations properties for the deployment            |
 | `affinity`                   | `{}`                                      | Affinity properties for the deployment               |
 
-### Uninstall
+## Uninstall
 
 For a detailed uninstall guide, see the [cloudflare-operator documentation](https://containeroo.github.io/cloudflare-operator/installation/#uninstalling).
