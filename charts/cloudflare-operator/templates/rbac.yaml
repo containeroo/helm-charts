@@ -1,9 +1,10 @@
+{{- if .Values.clusterRole.create -}}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: {{ include "cloudflare-operator.fullname" . }}
+  name: {{ template "cloudflare-operator.clusterRoleName" . }}
 rules:
 - apiGroups:
   - cf.containeroo.ch
@@ -129,12 +130,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "cloudflare-operator.fullname" . }}
+  name: {{ template "cloudflare-operator.clusterRoleName" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "cloudflare-operator.fullname" . }}
+  name: {{ template "cloudflare-operator.clusterRoleName" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "cloudflare-operator.fullname" . }}
+    name: {{ template "cloudflare-operator.serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
+{{- end -}}

@@ -49,3 +49,26 @@ Selector labels
 app.kubernetes.io/name: {{ include "cloudflare-operator.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create the name of the service account to use.
+*/}}
+{{- define "cloudflare-operator.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "cloudflare-operator.fullname" .) .Values.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create the name of the cluster role to use.
+*/}}
+{{- define "cloudflare-operator.clusterRoleName" -}}
+{{- if .Values.clusterRole.create -}}
+    {{ default (include "cloudflare-operator.fullname" .) .Values.clusterRole.name }}
+{{- else -}}
+    {{ default "default" .Values.clusterRole.name }}
+{{- end -}}
+{{- end -}}
+

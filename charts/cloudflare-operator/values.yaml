@@ -21,6 +21,13 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# Specifies whether to create a cluster role & cluster role binding for cloudflare-operator
+clusterRole:
+  create: true
+  # The name of a cluster role to bind to; if not set and create is
+  # true, a name based on fullname is generated
+  name: ""
+
 podAnnotations: {}
 
 podSecurityContext: {}
