@@ -29,10 +29,10 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `resources.requests.memory`               | `64Mi`                                    | Memory resource requests for the deployment           |
 | `resources.limits.cpu`                    | `None`                                    | CPU resource limits for the deployment                |
 | `resources.limits.memory`                 | `None`                                    | Memory resource limits for the deployment             |
-| `metrics.serivceMonitor.enabled`          | `false`                                   | Enable service monitor                                |
-| `metrics.serviceMonitor.namespace`        | same as release namespace                 | Namespace for the service monitor                     |
-| `metrics.serviceMonitor.additionalLabels` | `{}`                                      | Additional labels for the service monitor             |
-| `metrics.serviceMonitor.scrapeInterval`   | `60s`                                     | Scrape interval for the service monitor               |
+| `metrics.podMonitor.enabled`              | `false`                                   | Enable pod monitor                                    |
+| `metrics.podMonitor.namespace`            | same as release namespace                 | Namespace for the pod monitor                         |
+| `metrics.podMonitor.additionalLabels`     | `{}`                                      | Additional labels for the pod monitor                 |
+| `metrics.podMonitor.scrapeInterval`       | `60s`                                     | Scrape interval for the pod monitor                   |
 | `metrics.prometheusRule.enabled`          | `false`                                   | Enable prometheus rule                                |
 | `metrics.prometheusRule.namespace`        | same as release namespace                 | Namespace for the prometheus rule                     |
 | `metrics.prometheusRule.additionalLabels` | `{}`                                      | Additional labels for the prometheus rule             |

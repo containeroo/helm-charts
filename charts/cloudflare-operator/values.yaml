@@ -55,14 +55,14 @@ resources:
 
 # Enable metrics monitoring of the operator
 metrics:
-  # Specifies wether to create a ServiceMonitor for the operator
-  serviceMonitor:
+  # Specifies wether to create a PodMonitor for the operator
+  podMonitor:
     enabled: false
-    # Specifies the namespace to create the ServiceMonitor in
+    # Specifies the namespace to create the PodMonitor in
     namespace:
-    # Add additional labels to the ServiceMonitor
+    # Add additional labels to the PodMonitor
     additionalLabels: {}
-    # Specifies the scrape interval for the ServiceMonitor
+    # Specifies the scrape interval for the PodMonitor
     scrapeInterval: 60s
   # Specifies wether to create a PrometheusRule for the operator
   prometheusRule:
