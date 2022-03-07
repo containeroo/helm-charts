@@ -22,21 +22,21 @@ spec:
             severity: critical
         - alert: DNSRecordFailures
           annotations:
-            summary: DNSRecord {{ "{{ $labels.name }}" }} ({{ "{{ $labels.recordName }}" }}) in namespace {{ "{{ $labels.exported_namespace }}" }} failed
+            summary: DNSRecord {{ "{{ $labels.name }}" }} ({{ "{{ $labels.record_name }}" }}) in namespace {{ "{{ $labels.exported_namespace }}" }} failed
           expr: cloudflare_operator_dns_record_failure_counter > 0
           for: 1m
           labels:
             severity: critical
         - alert: IPFailures
           annotations:
-            summary: "{{ "{{ $labels.ipType | title }}" }} IP {{ "{{ $labels.name }}" }} failed"
+            summary: "{{ "{{ $labels.ip_type | title }}" }} IP {{ "{{ $labels.name }}" }} failed"
           expr: cloudflare_operator_ip_failure_counter > 0
           for: 1m
           labels:
             severity: critical
         - alert: ZoneFailures
           annotations:
-            summary: Zone {{ "{{ $labels.name }}" }} ({{ "{{ $labels.zoneName }}" }}) failed
+            summary: Zone {{ "{{ $labels.name }}" }} ({{ "{{ $labels.zone_name }}" }}) failed
           expr: cloudflare_operator_zone_failure_counter > 0
           for: 1m
           labels:
