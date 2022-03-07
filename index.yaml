@@ -9,6 +9,37 @@ entries:
           url: https://github.com/containeroo/cloudflare-operator
       artifacthub.io/operator: "true"
     apiVersion: v2
+    appVersion: v0.0.20
+    created: "2022-03-07T22:23:47.228988556Z"
+    description: Helm chart for Cloudflare Operator
+    digest: 919680059a64e7e8ea5a8c5441cb9f9926a5a11bef089ea29631cd5b79ddc982
+    home: https://containeroo.github.io/cloudflare-operator
+    keywords:
+    - cloudflare
+    - operator
+    - dns
+    - dyndns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cloudflare-operator
+    sources:
+    - https://github.com/containeroo/cloudflare-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-0.0.27/cloudflare-operator-0.0.27.tgz
+    version: 0.0.27
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cloudflare-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
     appVersion: v0.0.19
     created: "2022-03-07T20:33:48.58029428Z"
     description: Helm chart for Cloudflare Operator
