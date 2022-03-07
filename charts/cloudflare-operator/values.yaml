@@ -53,6 +53,25 @@ resources:
     cpu: 100m
     memory: 200Mi
 
+# Enable metrics monitoring of the operator
+metrics:
+  # Specifies wether to create a ServiceMonitor for the operator
+  serviceMonitor:
+    enabled: false
+    # Specifies the namespace to create the ServiceMonitor in
+    namespace:
+    # Add additional labels to the ServiceMonitor
+    additionalLabels: {}
+    # Specifies the scrape interval for the ServiceMonitor
+    scrapeInterval: 60s
+  # Specifies wether to create a PrometheusRule for the operator
+  prometheusRule:
+    enabled: false
+    # Specifies the namespace to create the PrometheusRule in
+    namespace:
+    # Add additional labels to the PrometheusRule
+    additionalLabels: {}
+
 livenessProbe:
   enabled: true
 

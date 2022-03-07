@@ -1,0 +1,24 @@
+{{- if and .Values.metrics.prometheusRule.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "cloudflare-operator.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.metrics.prometheusRule.namespace }}
+  labels:
+    {{- include "cloudflare-operator.labels" . | nindent 4 }}
+    {{- with .Values.metrics.prometheusRule.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: cloudflare-operator
+      rules:
+        - alert: DNSRecordFailures
+          expr: cloudflare_dns_record_failures_total > 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: Cloudflare DNS recrords with failures
+            description: This alert is fired when error number is > 0
+{{- end }}
