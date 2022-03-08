@@ -2,14 +2,14 @@ apiVersion: v2
 name: cloudflare-operator
 description: Helm chart for Cloudflare Operator
 type: application
-version: 0.0.27
-appVersion: "v0.0.20"
+version: 0.1.0
+appVersion: "v0.1.0"
 keywords:
   - cloudflare
   - operator
   - dns
   - dyndns
-home: https://containeroo.github.io/cloudflare-operator
+home: https://docs.cf.containeroo.ch
 sources:
   - https://github.com/containeroo/cloudflare-operator
   - https://github.com/containeroo/helm-charts
