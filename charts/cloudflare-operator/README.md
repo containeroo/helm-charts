@@ -4,7 +4,7 @@ The [cloudflare-operator chart](https://github.com/containeroo/helm-charts/tree/
 
 ## Installation
 
-For a detailed installation guide, see the [cloudflare-operator documentation](https://containeroo.github.io/cloudflare-operator/installation/#steps).
+For a detailed installation guide, see the [cloudflare-operator documentation](https://docs.cf.containeroo.ch/installation/#installing-with-helm).
 
 ## Configuration
 
@@ -44,4 +44,4 @@ The following tables lists the configurable parameters of cloudflare-operator he
 
 ## Uninstall
 
-For a detailed uninstall guide, see the [cloudflare-operator documentation](https://containeroo.github.io/cloudflare-operator/installation/#uninstalling).
+For a detailed uninstall guide, see the [cloudflare-operator documentation](https://docs.cf.containeroo.ch/installation/#uninstalling-with-helm).
