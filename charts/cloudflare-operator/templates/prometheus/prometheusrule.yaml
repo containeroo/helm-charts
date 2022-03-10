@@ -16,28 +16,28 @@ spec:
         - alert: AccountFailures
           annotations:
             summary: Account {{ "{{ $labels.name }}" }} failed
-          expr: cloudflare_operator_account_failure_counter > 0
+          expr: cloudflare_operator_account_status > 0
           for: 1m
           labels:
             severity: critical
         - alert: DNSRecordFailures
           annotations:
             summary: DNSRecord {{ "{{ $labels.name }}" }} ({{ "{{ $labels.record_name }}" }}) in namespace {{ "{{ $labels.exported_namespace }}" }} failed
-          expr: cloudflare_operator_dns_record_failure_counter > 0
+          expr: cloudflare_operator_dns_record_status > 0
           for: 1m
           labels:
             severity: critical
         - alert: IPFailures
           annotations:
             summary: "{{ "{{ $labels.ip_type | title }}" }} IP {{ "{{ $labels.name }}" }} failed"
-          expr: cloudflare_operator_ip_failure_counter > 0
+          expr: cloudflare_operator_ip_status > 0
           for: 1m
           labels:
             severity: critical
         - alert: ZoneFailures
           annotations:
             summary: Zone {{ "{{ $labels.name }}" }} ({{ "{{ $labels.zone_name }}" }}) failed
-          expr: cloudflare_operator_zone_failure_counter > 0
+          expr: cloudflare_operator_zone_status > 0
           for: 1m
           labels:
             severity: critical
