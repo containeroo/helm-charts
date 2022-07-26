@@ -22,6 +22,7 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `serviceAccount.name`                     | `cloudflare-operator`                     | Service account to be used                            |
 | `clusterRole.create`                      | `true`                                    | If `true`, create cluster role & cluster role binding |
 | `clusterRole.name`                        | `cloudflare-operator`                     | The name of a cluster role to bind to                 |
+| `clusterRole.extraRules`                  | `[]`                                      | Additional rules to be included in the role           |
 | `podAnnotations`                          | `{}`                                      | Additional pod annotations                            |
 | `podLabels`                               | `{}`                                      | Additional pod labels                                 |
 | `securityContext`                         | `{}`                                      | Adding `securityContext` options to the pod           |
@@ -41,10 +42,50 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `nodeSelector`                            | `{}`                                      | Node Selector properties for the deployment           |
 | `tolerations`                             | `[]`                                      | Tolerations properties for the deployment             |
 | `affinity`                                | `{}`                                      | Affinity properties for the deployment                |
+| `sidecars`                                | `[]`                                      | Add additional sidecar containers to the operator pod |
 
 ## Uninstall
 
 For a detailed uninstall guide, see the [cloudflare-operator documentation](https://docs.cf.containeroo.ch/installation/#uninstalling-with-helm).
+
+## Update IP from service.status.loadBalancer.ingress.[0].ip
+Add kubectl sidecar container to be able to send requests into kubernetes API.
+```yaml
+sidecars:
+  - name: proxy
+    image: bitnami/kubectl
+    args: ["proxy","--port=8858"]
+```
+
+Add additional permissions for this sidecar to be able to get service resource.
+
+```yaml
+clusterRole:
+  extraRules:
+  - apiGroups:
+    - ""
+    resources:
+    - services
+    verbs:
+    - get
+    - list
+```
+
+Now add IP object
+
+```yaml
+---
+apiVersion: cf.containeroo.ch/v1beta1
+kind: IP
+metadata:
+  name: ingress-ip
+spec:
+  type: dynamic
+  ipSources:
+    - url: localhost:8858/api/v1/namespaces/ingress-nginx/services/ingress-nginx
+      responseJSONPath: '{.status.loadBalancer.ingress.[0].ip}'
+  interval: 5m
+```
 
 ## Upgrade Notes
 
