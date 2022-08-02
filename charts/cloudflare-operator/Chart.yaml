@@ -2,8 +2,8 @@ apiVersion: v2
 name: cloudflare-operator
 description: Helm chart for Cloudflare Operator
 type: application
-version: 0.3.3
-appVersion: "v0.3.3"
+version: 0.3.4
+appVersion: "v0.3.4"
 keywords:
   - cloudflare
   - operator
