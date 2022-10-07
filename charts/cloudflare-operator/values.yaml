@@ -12,6 +12,18 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Add additional sidecar containers to the operator pod
+# e.g:
+# sidecars:
+#   - name: your-image-name
+#     image: your-image
+#     imagePullPolicy: Always
+#     ports:
+#       - name: portname
+#         containerPort: 1234
+#
+sidecars: []
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -27,6 +39,19 @@ clusterRole:
   # The name of a cluster role to bind to; if not set and create is
   # true, a name based on fullname is generated
   name: ""
+  # Additional rules to be included in the role
+  # e.g:
+  # extraRules:
+  # - apiGroups:
+  #   - ""
+  #   resources:
+  #   - services
+  #   verbs:
+  #   - get
+  #   - list
+  #   - watch
+  #
+  extraRules: []
 
 podAnnotations: {}
 

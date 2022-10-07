@@ -22,6 +22,7 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `serviceAccount.name`                     | `cloudflare-operator`                     | Service account to be used                            |
 | `clusterRole.create`                      | `true`                                    | If `true`, create cluster role & cluster role binding |
 | `clusterRole.name`                        | `cloudflare-operator`                     | The name of a cluster role to bind to                 |
+| `clusterRole.extraRules`                  | `[]`                                      | Additional rules to be included in the role           |
 | `podAnnotations`                          | `{}`                                      | Additional pod annotations                            |
 | `podLabels`                               | `{}`                                      | Additional pod labels                                 |
 | `securityContext`                         | `{}`                                      | Adding `securityContext` options to the pod           |
@@ -41,6 +42,7 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `nodeSelector`                            | `{}`                                      | Node Selector properties for the deployment           |
 | `tolerations`                             | `[]`                                      | Tolerations properties for the deployment             |
 | `affinity`                                | `{}`                                      | Affinity properties for the deployment                |
+| `sidecars`                                | `[]`                                      | Add additional sidecar containers to the operator pod |
 
 ## Uninstall
 
