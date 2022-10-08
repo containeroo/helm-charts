@@ -15,12 +15,12 @@ fullnameOverride: ""
 # Add additional sidecar containers to the operator pod
 # e.g:
 # sidecars:
-#   - name: your-image-name
-#     image: your-image
+#   - name: kubectl
+#     image: bitnami/kubectl
 #     imagePullPolicy: Always
 #     ports:
-#       - name: portname
-#         containerPort: 1234
+#       - name: http
+#         containerPort: 8888
 #
 sidecars: []
 
