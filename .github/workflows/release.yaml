@@ -25,6 +25,6 @@ jobs:
           chmod 700 get_helm.sh
           ./get_helm.sh
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.0.0
+        uses: helm/chart-releaser-action@v1.4.1
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
