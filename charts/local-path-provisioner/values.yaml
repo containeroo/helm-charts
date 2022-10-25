@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: rancher/local-path-provisioner
-  tag: v0.0.22
+  tag: v0.0.23
   pullPolicy: IfNotPresent
 
 helperImage:
@@ -58,6 +58,14 @@ nodePathMap:
     paths:
       - /opt/local-path-provisioner
 
+# `sharedFileSystemPath` allows the provisioner to use a filesystem that is mounted on all
+# nodes at the same time. In this case all access modes are supported: `ReadWriteOnce`,
+# `ReadOnlyMany` and `ReadWriteMany` for storage claims. In addition
+# `volumeBindingMode: Immediate` can be used in  StorageClass definition.
+# Please note that `nodePathMap` and `sharedFileSystemPath` are mutually exclusive.
+# If `sharedFileSystemPath` is used, then `nodePathMap` must be set to `[]`.
+# sharedFileSystemPath: ""
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -99,17 +107,6 @@ configmap:
     #!/bin/sh
     set -eu
     rm -rf "$VOL_DIR"
-  # specify the custom helper pod yaml
-  helperPod: |-
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: helper-pod
-    spec:
-      containers:
-      - name: helper-pod
-        image: busybox
-        imagePullPolicy: IfNotPresent
 
 # Number of provisioner worker threads to call provision/delete simultaneously.
 # workerThreads: 4
