@@ -4,7 +4,7 @@ The [cloudflare-operator chart](https://github.com/containeroo/helm-charts/tree/
 
 ## Installation
 
-For a detailed installation guide, see the [cloudflare-operator documentation](https://docs.cf.containeroo.ch/installation/#installing-with-helm).
+For a detailed installation guide, see the [cloudflare-operator documentation](https://containeroo.ch/docs/cloudflare-operator/installation/).
 
 ## Configuration
 
@@ -43,10 +43,6 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `tolerations`                             | `[]`                                      | Tolerations properties for the deployment             |
 | `affinity`                                | `{}`                                      | Affinity properties for the deployment                |
 | `sidecars`                                | `[]`                                      | Add additional sidecar containers to the operator pod |
-
-## Uninstall
-
-For a detailed uninstall guide, see the [cloudflare-operator documentation](https://docs.cf.containeroo.ch/installation/#uninstalling-with-helm).
 
 ## Upgrade Notes
 

@@ -9,7 +9,7 @@ keywords:
   - operator
   - dns
   - dyndns
-home: https://docs.cf.containeroo.ch
+home: https://containeroo.ch/docs/cloudflare-operator
 sources:
   - https://github.com/containeroo/cloudflare-operator
   - https://github.com/containeroo/helm-charts
