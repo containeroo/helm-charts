@@ -46,9 +46,23 @@ The following tables lists the configurable parameters of cloudflare-operator he
 
 ## Upgrade Notes
 
+## From v0.x.x to v1.0.0
+
+The apiVersion of the cloudflare-operator CRDs changed from `cf.containeroo.ch/v1beta1` to `cloudflare-operator.io/v1`.
+
+It is advised to backup and then remove all existing objects and then update the CRDs to `v1.0.0`:
+
+```shell
+kubectl delete crds accounts.cf.containeroo.ch zones.cf.containeroo.ch dnsrecords.cf.containeroo.ch ips.cf.containeroo.ch
+# wait until cloudflare-operator removes all objects
+# update CRDs
+kubectl apply --server-side -f https://github.com/containeroo/cloudflare-operator/releases/download/v1.0.0/crds.yaml
+# update cloudflare-operator
+```
+
 ## From v0.0.x to v0.1.0
 
-The apiVersion of the cloudflare-operator CRDs changed from `cf.containeroo.ch/v1alpha1` to `cf.containeroo.ch/v1beta1`.  
+The apiVersion of the cloudflare-operator CRDs changed from `cf.containeroo.ch/v1alpha1` to `cf.containeroo.ch/v1beta1`.\
 Please update your CRDs to `cf.containeroo.ch/v1beta1` before upgrading to `v0.1.0`:
 
 ```shell
