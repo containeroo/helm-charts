@@ -10,6 +10,37 @@ entries:
       artifacthub.io/operator: "true"
     apiVersion: v2
     appVersion: v1.3.0
+    created: "2024-02-06T11:43:53.199488577Z"
+    description: Helm chart for Cloudflare Operator
+    digest: 8c379dbb0673ab159a63e4667c2f9791b0da345e78e442405e18719a0d68f452
+    home: https://containeroo.ch/docs/cloudflare-operator
+    keywords:
+    - cloudflare
+    - operator
+    - dns
+    - dyndns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cloudflare-operator
+    sources:
+    - https://github.com/containeroo/cloudflare-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-1.3.1/cloudflare-operator-1.3.1.tgz
+    version: 1.3.1
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cloudflare-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: v1.3.0
     created: "2024-02-04T14:46:29.14563665Z"
     description: Helm chart for Cloudflare Operator
     digest: d99896e27cb2f5e94d60b5aceb8249e09d6897377a6d75f3ccce4ad6f7fafb38
@@ -1757,6 +1788,22 @@ entries:
     version: 0.0.1
   local-path-provisioner:
   - apiVersion: v1
+    appVersion: v0.0.26
+    created: "2024-02-06T11:43:53.355908925Z"
+    description: Use HostPath for persistent local storage with Kubernetes
+    digest: c7747a2bccc3238fcac956b10a19e42bbd26a271629b060c3f88a9875398cd7a
+    home: https://github.com/rancher/local-path-provisioner
+    keywords:
+    - storage
+    - hostpath
+    kubeVersion: '>=1.12.0-r0'
+    name: local-path-provisioner
+    sources:
+    - https://github.com/rancher/local-path-provisioner.git
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/local-path-provisioner-0.0.26/local-path-provisioner-0.0.26.tgz
+    version: 0.0.26
+  - apiVersion: v1
     appVersion: v0.0.25
     created: "2023-11-20T08:43:43.84339737Z"
     description: Use HostPath for persistent local storage with Kubernetes
@@ -1937,4 +1984,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/nfs-client-provisioner-1.2.9/nfs-client-provisioner-1.2.9.tgz
     version: 1.2.9
-generated: "2024-02-04T14:46:29.145829712Z"
+generated: "2024-02-06T11:43:53.356209365Z"
