@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: rancher/local-path-provisioner
-  tag: v0.0.26
+  tag: v0.0.27
   pullPolicy: IfNotPresent
 
 helperImage:
@@ -47,6 +47,9 @@ storageClass:
   ## volumeBindingMode field controls when volume binding and dynamic provisioning should occur, can be  "Immediate" or "WaitForFirstConsumer"
   volumeBindingMode: WaitForFirstConsumer
 
+  ## Set a path pattern, if unset the default will be used
+  # pathPattern: "{{ .PVC.Namespace }}-{{ .PVC.Name }}"
+
 # nodePathMap is the place user can customize where to store the data on each node.
 # 1. If one node is not listed on the nodePathMap, and Kubernetes wants to create volume on it, the paths specified in
 #    DEFAULT_PATH_FOR_NON_LISTED_NODES will be used for provisioning.
@@ -72,6 +75,22 @@ nodePathMap:
 # If `sharedFileSystemPath` is used, then `nodePathMap` must be set to `[]`.
 # sharedFileSystemPath: ""
 
+# `storageClassConfigs` allows the provisioner to manage multiple independent storage classes.
+# Each storage class must have a unique name, and contains the same fields as shown above for
+# a single storage class setup, EXCEPT for the provisionerName, which is the same for all
+# storage classes, and name, which is the key of the map.
+# storageClassConfigs: {}
+#   my-storage-class:
+#     storageClass:
+#       create: true
+#       defaultClass: false
+#       defaultVolumeType: hostPath
+#       reclaimPolicy: Delete
+#     sharedFileSystemPath: ""
+#     ## OR
+#     # See above
+#     nodePathMap: {}
+    
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -98,6 +117,15 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+helperPod:
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
 rbac:
   # Specifies whether RBAC resources should be created
@@ -128,6 +156,11 @@ configmap:
     #!/bin/sh
     set -eu
     rm -rf "$VOL_DIR"
+  helperPod:
+    # Allows to run the helper pod in another namespace. Uses release namespace by default.
+    namespaceOverride: ""
+    name: "helper-pod"
+    annotations: {}
 
 # Number of provisioner worker threads to call provision/delete simultaneously.
 # workerThreads: 4
