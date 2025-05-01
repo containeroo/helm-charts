@@ -16,6 +16,7 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `image.pullPolicy`                        | `IfNotPresent`                            | Image pull policy                                     |
 | `image.tag`                               | `None`                                    | Overrides the image tag of chart `appVersion`         |
 | `image.pullSecret`                        | `None`                                    | Image pull secret                                     |
+| `args`                                    | `[]`                                      | Command line arguments to pass to the container       |
 | `fullnameOverride`                        | `None`                                    | Override the full name of resources                   |
 | `serviceAccount.create`                   | `true`                                    | If `true`, create a new service account               |
 | `serviceAccount.annotations`              | `{}`                                      | Additional Service Account annotations                |

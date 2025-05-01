@@ -8,6 +8,13 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# Command line arguments to pass to the container
+# e.g:
+# args:
+#   - "--retry-interval=5s"
+#   - "--metrics-bind-address=:8080"
+args: []
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
