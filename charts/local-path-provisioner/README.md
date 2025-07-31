@@ -30,7 +30,7 @@ To install the chart with the release name `local-path-storage`:
 ```console
 $ git clone https://github.com/rancher/local-path-provisioner.git
 $ cd local-path-provisioner
-$ helm install ./deploy/chart/local-path-provisioner --name local-path-storage --namespace local-path-storage
+$ helm install local-path-storage --create-namespace --namespace local-path-storage ./deploy/chart/local-path-provisioner/
 ```
 
 The command deploys Local Path Provisioner on the Kubernetes cluster in the default configuration. The
@@ -57,7 +57,7 @@ default values.
 | ----------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | `commonLabels`                      | Custom labels to apply to all resources                                         | `{}`                                                                                |
 | `image.repository`                  | Local Path Provisioner image name                                               | `rancher/local-path-provisioner`                                                    |
-| `image.tag`                         | Local Path Provisioner image tag                                                | `v0.0.31` .                                                                         |
+| `image.tag`                         | Local Path Provisioner image tag                                                | `v0.0.32` .                                                                         |
 | `image.pullPolicy`                  | Image pull policy                                                               | `IfNotPresent`                                                                      |
 | `storageClass.create`               | If true, create a `StorageClass`                                                | `true`                                                                              |
 | `storageClass.provisionerName`      | The provisioner name for the storage class                                      | `nil`                                                                               |

@@ -2,10 +2,11 @@
 
 replicaCount: 1
 commonLabels: {}
+namespaceOverride: ""
 
 image:
   repository: rancher/local-path-provisioner
-  tag: v0.0.31
+  tag: v0.0.32
   pullPolicy: IfNotPresent
 
 helperImage:
@@ -90,7 +91,7 @@ nodePathMap:
 #     sharedFileSystemPath: ""
 #     ## OR
 #     # See above
-#     nodePathMap: {}
+#     nodePathMap: []
     
 podAnnotations: {}
 
@@ -145,6 +146,9 @@ tolerations: []
 
 affinity: {}
 
+podDisruptionBudget:
+  enabled: false
+
 configmap:
   # specify the config map name
   name: local-path-config
@@ -162,7 +166,7 @@ configmap:
     namespaceOverride: ""
     name: "helper-pod"
     annotations: {}
-
+    tolerations: []
 # Number of provisioner worker threads to call provision/delete simultaneously.
 # workerThreads: 4
 
@@ -171,3 +175,6 @@ configmap:
 
 # Number of retries of failed volume deletion. 0 means retry indefinitely.
 # deletionRetryCount: 15
+
+# Extra arguments to pass to the CLI
+extraArgs: []

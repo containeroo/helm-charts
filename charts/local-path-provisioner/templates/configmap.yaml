@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.configmap.name }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "local-path-provisioner.namespace" . }}
   labels:
 {{ include "local-path-provisioner.labels" . | indent 4 }}
 data:
@@ -38,7 +38,7 @@ data:
     kind: Pod
     metadata:
       name: {{ .Values.configmap.helperPod.name }}
-      namespace: {{ default .Release.Namespace .Values.configmap.helperPod.namespaceOverride }}
+      namespace: {{ default (include "local-path-provisioner.namespace" .) .Values.configmap.helperPod.namespaceOverride }}
       {{- with .Values.configmap.helperPod.annotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -49,6 +49,9 @@ data:
         - key: node.kubernetes.io/disk-pressure
           operator: Exists
           effect: NoSchedule
+        {{- with .Values.configmap.helperPod.tolerations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       containers:
         - name: helper-pod
           {{- if .Values.privateRegistry.registryUrl }}
@@ -59,4 +62,3 @@ data:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.helperPod.resources | nindent 12 }}
-
