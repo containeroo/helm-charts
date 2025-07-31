@@ -2036,6 +2036,22 @@ entries:
     version: 0.0.1
   local-path-provisioner:
   - apiVersion: v1
+    appVersion: v0.0.32
+    created: "2025-07-31T18:44:09.880567889Z"
+    description: Use HostPath for persistent local storage with Kubernetes
+    digest: 486dbcf9878dcbea60a93c9cc18c1014eec4187be68b6f59de95bb31048e5981
+    home: https://github.com/rancher/local-path-provisioner
+    keywords:
+    - storage
+    - hostpath
+    kubeVersion: '>=1.12.0-r0'
+    name: local-path-provisioner
+    sources:
+    - https://github.com/rancher/local-path-provisioner.git
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/local-path-provisioner-0.0.33/local-path-provisioner-0.0.33.tgz
+    version: 0.0.33
+  - apiVersion: v1
     appVersion: v0.0.31
     created: "2025-01-28T08:44:44.603214931Z"
     description: Use HostPath for persistent local storage with Kubernetes
@@ -2328,4 +2344,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/nfs-client-provisioner-1.2.9/nfs-client-provisioner-1.2.9.tgz
     version: 1.2.9
-generated: "2025-05-01T13:22:33.098695475Z"
+generated: "2025-07-31T18:44:09.880823889Z"
