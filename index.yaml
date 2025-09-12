@@ -9,6 +9,37 @@ entries:
           url: https://github.com/containeroo/cloudflare-operator
       artifacthub.io/operator: "true"
     apiVersion: v2
+    appVersion: v1.6.0
+    created: "2025-09-12T12:57:42.930914119Z"
+    description: Helm chart for Cloudflare Operator
+    digest: 40798bcf78d3eb6fa240856b82e67f4413b31c0f67474d72f347d37c023b270f
+    home: https://containeroo.ch/docs/cloudflare-operator
+    keywords:
+    - cloudflare
+    - operator
+    - dns
+    - dyndns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cloudflare-operator
+    sources:
+    - https://github.com/containeroo/cloudflare-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-1.6.0/cloudflare-operator-1.6.0.tgz
+    version: 1.6.0
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cloudflare-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
     appVersion: v1.5.1
     created: "2025-05-01T13:22:33.098305634Z"
     description: Helm chart for Cloudflare Operator
@@ -2344,4 +2375,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/nfs-client-provisioner-1.2.9/nfs-client-provisioner-1.2.9.tgz
     version: 1.2.9
-generated: "2025-07-31T18:44:09.880823889Z"
+generated: "2025-09-12T12:57:42.931232295Z"
