@@ -32,9 +32,14 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.args }}
+          {{- if or .Values.args .Values.gatewayAPI.enabled }}
           args:
-            {{- toYaml .Values.args | nindent 12 }}
+            {{- range .Values.args }}
+            - {{ . | quote }}
+            {{- end }}
+            {{- if .Values.gatewayAPI.enabled }}
+            - "--enable-gateway-api"
+            {{- end }}
           {{- end }}
           ports:
             - name: metrics

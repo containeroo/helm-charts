@@ -62,6 +62,22 @@ rules:
   - ingresses/finalizers
   verbs:
   - update
+{{- if .Values.gatewayAPI.enabled }}
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes/finalizers
+  verbs:
+  - update
+{{- end }}
 {{ if .Values.clusterRole.extraRules }}
   {{- toYaml .Values.clusterRole.extraRules }}
 {{- end }}

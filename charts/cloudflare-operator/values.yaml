@@ -15,6 +15,10 @@ image:
 #   - "--metrics-bind-address=:8080"
 args: []
 
+gatewayAPI:
+  # Enable reconciliation for Gateway API HTTPRoute resources (requires Gateway API CRDs installed in the cluster).
+  enabled: false
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
