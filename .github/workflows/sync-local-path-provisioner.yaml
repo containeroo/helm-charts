@@ -1,0 +1,30 @@
+name: Sync local-path-provisioner chart
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync chart from upstream
+        run: ./.github/scripts/sync-local-path-provisioner.sh
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: sync local-path-provisioner chart"
+          title: "chore: sync local-path-provisioner chart"
+          body: "Automated update from rancher/local-path-provisioner."
+          branch: "automation/local-path-provisioner-sync"
+          delete-branch: true
+          assignees: "rxbn"
