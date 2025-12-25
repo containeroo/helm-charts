@@ -5,6 +5,11 @@ repo_url="https://github.com/rancher/local-path-provisioner.git"
 chart_dir="charts/local-path-provisioner"
 chart_yaml="${chart_dir}/Chart.yaml"
 
+if ! command -v yq >/dev/null 2>&1; then
+  echo "yq is required on PATH" >&2
+  exit 1
+fi
+
 if [[ ! -f "${chart_yaml}" ]]; then
   echo "Missing ${chart_yaml}" >&2
   exit 1
@@ -54,4 +59,18 @@ rm -rf "${chart_dir}"
 mkdir -p "$(dirname "${chart_dir}")"
 cp -a "${src_chart}" "${chart_dir}"
 
-echo "Updated local-path-provisioner chart to ${latest_tag}"
+app_version="$(yq '.appVersion' "${chart_yaml}" | tr -d '"' | sed 's/^v//')"
+if [[ -z "${app_version}" ]]; then
+  echo "Missing appVersion in ${chart_yaml}" >&2
+  exit 1
+fi
+
+IFS='.' read -r major minor patch <<<"${app_version}"
+if [[ -z "${major}" || -z "${minor}" || -z "${patch}" ]]; then
+  echo "Unexpected appVersion format: ${app_version}" >&2
+  exit 1
+fi
+next_chart_version="${major}.${minor}.$((patch + 1))"
+yq -i ".version = \"${next_chart_version}\"" "${chart_yaml}"
+
+echo "Updated local-path-provisioner chart to ${latest_tag} with chart version bump"

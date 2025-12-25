@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install yq
+        uses: mikefarah/yq@v4
+
       - name: Sync chart from upstream
         run: ./.github/scripts/sync-local-path-provisioner.sh
 
