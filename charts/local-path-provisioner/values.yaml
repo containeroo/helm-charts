@@ -6,7 +6,7 @@ namespaceOverride: ""
 
 image:
   repository: rancher/local-path-provisioner
-  tag: v0.0.32
+  tag: v0.0.33
   pullPolicy: IfNotPresent
 
 helperImage:
@@ -48,6 +48,9 @@ storageClass:
 
   ## volumeBindingMode field controls when volume binding and dynamic provisioning should occur, can be  "Immediate" or "WaitForFirstConsumer"
   volumeBindingMode: WaitForFirstConsumer
+
+  ## allowedTopologies field controls on which nodes the volumes can be dynamically provisioned, an empty value means no topology constraints
+  allowedTopologies: []
 
   ## Set a path pattern, if unset the default will be used
   # pathPattern: "{{ .PVC.Namespace }}-{{ .PVC.Name }}"
@@ -92,11 +95,13 @@ nodePathMap:
 #     ## OR
 #     # See above
 #     nodePathMap: []
-    
+
 podAnnotations: {}
 
 podSecurityContext: {}
   # runAsNonRoot: true
+
+hostUsers: true
 
 securityContext: {}
   # allowPrivilegeEscalation: false
@@ -146,8 +151,15 @@ tolerations: []
 
 affinity: {}
 
+# Priority class name for the pod
+priorityClassName: ""
+
 podDisruptionBudget:
   enabled: false
+  # Select either maxUnavailable or minAvailable
+  #maxUnavailable:
+  #minAvailable:
+  #unhealthyPodEvictionPolicy: IfHealthyBudget
 
 configmap:
   # specify the config map name
@@ -167,6 +179,8 @@ configmap:
     name: "helper-pod"
     annotations: {}
     tolerations: []
+    # Priority class name for the helper pod (defaults to system-node-critical)
+    priorityClassName: "system-node-critical"
 # Number of provisioner worker threads to call provision/delete simultaneously.
 # workerThreads: 4
 
