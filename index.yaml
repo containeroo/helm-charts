@@ -8,6 +8,33 @@ entries:
         - name: Upstream Project
           url: https://github.com/containeroo/cert-manager-webhook-bluecat
     apiVersion: v2
+    appVersion: v1.0.1
+    created: "2026-02-16T11:40:00.650155394Z"
+    description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
+    digest: 72af6ed917ece4ec4c8194b5aab2e1c90b0b9c2743e0ef2aa1a4f60103b53863
+    home: https://github.com/containeroo/cert-manager-webhook-bluecat
+    keywords:
+    - cert-manager
+    - webhook
+    - bluecat
+    - dns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cert-manager-webhook-bluecat
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cert-manager-webhook-bluecat-1.0.1/cert-manager-webhook-bluecat-1.0.1.tgz
+    version: 1.0.1
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cert-manager-webhook-bluecat
+    apiVersion: v2
     appVersion: v1.0.0
     created: "2026-02-16T09:53:03.668806345Z"
     description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
@@ -2559,4 +2586,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/nfs-client-provisioner-1.2.9/nfs-client-provisioner-1.2.9.tgz
     version: 1.2.9
-generated: "2026-02-16T09:53:03.669057016Z"
+generated: "2026-02-16T11:40:00.650688559Z"
