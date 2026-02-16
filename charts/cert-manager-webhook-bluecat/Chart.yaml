@@ -1,5 +1,23 @@
-apiVersion: v1
-appVersion: "v1.0.0"
-description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
+apiVersion: v2
 name: cert-manager-webhook-bluecat
+description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
+type: application
+appVersion: "v1.0.0"
 version: 1.0.0
+keywords:
+  - cert-manager
+  - webhook
+  - bluecat
+  - dns
+home: https://github.com/containeroo/cert-manager-webhook-bluecat
+maintainers:
+  - name: rxbn
+    email: rxbn@containeroo.ch
+  - name: gi8
+    email: gi8@containeroo.ch
+annotations:
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/containeroo/helm-charts
+    - name: Upstream Project
+      url: https://github.com/containeroo/cert-manager-webhook-bluecat
