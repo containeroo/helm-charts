@@ -14,7 +14,7 @@ certManager:
 
 image:
   repository: containeroo/cert-manager-webhook-bluecat
-  tag: 0.0.1
+  tag: v0.0.3
   pullPolicy: IfNotPresent
 
 nameOverride: ""
