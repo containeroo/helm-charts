@@ -2,8 +2,8 @@ apiVersion: v2
 name: cert-manager-webhook-bluecat
 description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
 type: application
-appVersion: "v1.0.0"
-version: 1.0.0
+appVersion: "v1.0.1"
+version: 1.0.1
 keywords:
   - cert-manager
   - webhook
