@@ -1,5 +1,15 @@
 apiVersion: v1
 entries:
+  bluecat-webhook:
+  - apiVersion: v1
+    appVersion: v1.0.0
+    created: "2026-02-16T08:24:26.85848562Z"
+    description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
+    digest: a6169de49d0eca7a729ff9f0a1695015754e0eb74effd301b9e9a68731577b26
+    name: bluecat-webhook
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/bluecat-webhook-1.0.0/bluecat-webhook-1.0.0.tgz
+    version: 1.0.0
   cloudflare-operator:
   - annotations:
       artifacthub.io/links: |
@@ -2531,4 +2541,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/nfs-client-provisioner-1.2.9/nfs-client-provisioner-1.2.9.tgz
     version: 1.2.9
-generated: "2026-01-09T18:49:12.893003584Z"
+generated: "2026-02-16T08:24:26.858738867Z"
