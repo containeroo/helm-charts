@@ -1,15 +1,5 @@
 apiVersion: v1
 entries:
-  cert-manager-webhook-bluecat:
-  - apiVersion: v1
-    appVersion: v1.0.0
-    created: "2026-02-16T08:31:33.588621653Z"
-    description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
-    digest: ea9aff1a6696a0cdca8e9e84ef118f2f03f303e17c32674162c273e5a0948aad
-    name: cert-manager-webhook-bluecat
-    urls:
-    - https://github.com/containeroo/helm-charts/releases/download/cert-manager-webhook-bluecat-1.0.0/cert-manager-webhook-bluecat-1.0.0.tgz
-    version: 1.0.0
   cloudflare-operator:
   - annotations:
       artifacthub.io/links: |
