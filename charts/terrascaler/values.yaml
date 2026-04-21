@@ -1,0 +1,118 @@
+# Default values for terrascaler.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/containeroo/terrascaler
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+  annotations: {}
+
+gitlab:
+  # GitLab base URL. Leave empty to use gitlab.com.
+  baseURL: ""
+  # GitLab project ID or path, for example group/platform/infra.
+  project: group/project
+  branch: main
+  # GitLab API token. Prefer existingSecret for production deployments.
+  token: changeme
+  existingSecret: ""
+  tokenKey: token
+
+terraform:
+  # Terraform file path in the repository.
+  file: main.tf
+  # Terraform block type and labels containing the target integer attribute.
+  blockType: module
+  blockLabels:
+    - hostedcluster
+  # Terraform integer attribute to update.
+  attribute: worker_count
+
+nodeGroup:
+  id: hostedcluster-workers
+  minSize: 0
+  maxSize: 100
+
+templateNode:
+  cpu: "2"
+  memory: 8Gi
+  pods: 110
+  labels: {}
+
+tls:
+  # Existing secret containing tls.crt and tls.key. Enables server TLS when set.
+  existingSecret: ""
+  certKey: tls.crt
+  keyKey: tls.key
+  # Existing secret containing the client CA bundle. Enables mTLS when set.
+  clientCASecret: ""
+  clientCAKey: ca.crt
+
+extraArgs: []
+extraEnv: []
+extraVolumes: []
+extraVolumeMounts: []
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  allowPrivilegeEscalation: false
+
+openshift:
+  # Enable securityContext defaults compatible with OpenShift restricted SCC.
+  enabled: false
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

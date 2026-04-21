@@ -1,0 +1,28 @@
+apiVersion: v2
+name: terrascaler
+description: Helm chart for Terrascaler
+type: application
+version: 0.0.1
+appVersion: "v0.0.1"
+keywords:
+  - autoscaler
+  - cluster-autoscaler
+  - externalgrpc
+  - gitlab
+  - terraform
+  - opentofu
+home: https://github.com/containeroo/terrascaler
+sources:
+  - https://github.com/containeroo/terrascaler
+  - https://github.com/containeroo/helm-charts
+maintainers:
+  - name: rxbn
+    email: rxbn@containeroo.ch
+  - name: gi8
+    email: gi8@containeroo.ch
+annotations:
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/containeroo/helm-charts
+    - name: Upstream Project
+      url: https://github.com/containeroo/terrascaler

@@ -1,0 +1,137 @@
+{{- if and .Values.tls.clientCASecret (not .Values.tls.existingSecret) -}}
+{{- fail "tls.clientCASecret requires tls.existingSecret" -}}
+{{- end -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "terrascaler.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "terrascaler.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "terrascaler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "terrascaler.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ template "terrascaler.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- if .Values.openshift.enabled }}
+            {{- toYaml .Values.openshift.securityContext | nindent 12 }}
+            {{- else }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "--listen=:{{ .Values.service.port }}"
+            - "--gitlab-project={{ .Values.gitlab.project }}"
+            - "--gitlab-branch={{ .Values.gitlab.branch }}"
+            - "--file={{ .Values.terraform.file }}"
+            - "--block-type={{ .Values.terraform.blockType }}"
+            - "--block-labels={{ join "," .Values.terraform.blockLabels }}"
+            - "--attribute={{ .Values.terraform.attribute }}"
+            - "--node-group-id={{ .Values.nodeGroup.id }}"
+            - "--min-size={{ .Values.nodeGroup.minSize }}"
+            - "--max-size={{ .Values.nodeGroup.maxSize }}"
+            - "--template-cpu={{ .Values.templateNode.cpu }}"
+            - "--template-memory={{ .Values.templateNode.memory }}"
+            - "--template-pods={{ .Values.templateNode.pods }}"
+            {{- if .Values.gitlab.baseURL }}
+            - "--gitlab-base-url={{ .Values.gitlab.baseURL }}"
+            {{- end }}
+            {{- if .Values.templateNode.labels }}
+            {{- $templateLabels := list }}
+            {{- range $key, $value := .Values.templateNode.labels }}
+            {{- $templateLabels = append $templateLabels (printf "%s=%s" $key $value) }}
+            {{- end }}
+            - "--template-labels={{ join "," $templateLabels }}"
+            {{- end }}
+            {{- if .Values.tls.existingSecret }}
+            - "--tls-cert-file=/tls/{{ .Values.tls.certKey }}"
+            - "--tls-key-file=/tls/{{ .Values.tls.keyKey }}"
+            {{- end }}
+            {{- if .Values.tls.clientCASecret }}
+            - "--tls-client-ca-file=/client-ca/{{ .Values.tls.clientCAKey }}"
+            {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . | quote }}
+            {{- end }}
+          env:
+            - name: GITLAB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "terrascaler.gitlabTokenSecretName" . }}
+                  key: {{ .Values.gitlab.tokenKey }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: grpc
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- if or .Values.tls.existingSecret .Values.tls.clientCASecret .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- if .Values.tls.existingSecret }}
+            - name: tls
+              mountPath: /tls
+              readOnly: true
+            {{- end }}
+            {{- if .Values.tls.clientCASecret }}
+            - name: client-ca
+              mountPath: /client-ca
+              readOnly: true
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if or .Values.tls.existingSecret .Values.tls.clientCASecret .Values.extraVolumes }}
+      volumes:
+        {{- if .Values.tls.existingSecret }}
+        - name: tls
+          secret:
+            secretName: {{ .Values.tls.existingSecret }}
+        {{- end }}
+        {{- if .Values.tls.clientCASecret }}
+        - name: client-ca
+          secret:
+            secretName: {{ .Values.tls.clientCASecret }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
