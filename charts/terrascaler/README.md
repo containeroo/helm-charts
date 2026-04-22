@@ -1,8 +1,8 @@
 # terrascaler chart
 
-The [terrascaler chart](https://github.com/containeroo/helm-charts/tree/master/charts/terrascaler) installs Terrascaler, an external gRPC cloud provider for Kubernetes Cluster Autoscaler.
+The [terrascaler chart](https://github.com/containeroo/helm-charts/tree/master/charts/terrascaler) installs Terrascaler, a reduced Kubernetes autoscaler backed by GitLab and Terraform/OpenTofu.
 
-Terrascaler updates a configured integer field in a Terraform/OpenTofu repository through the GitLab API. The repository's GitLab CI pipeline can then apply the change and add Kubernetes worker nodes.
+Terrascaler watches Kubernetes nodes and pods directly. When eligible pending pods do not fit on current worker capacity, it commits a larger Terraform worker count to GitLab. The repository's GitLab CI pipeline can then apply the change and add Kubernetes worker nodes.
 
 ## Installation
 
@@ -22,15 +22,6 @@ Create the GitLab token secret first:
 kubectl create secret generic terrascaler-gitlab --from-literal=token="$GITLAB_TOKEN"
 ```
 
-## Cluster Autoscaler cloud config
-
-Configure Cluster Autoscaler with `--cloud-provider=externalgrpc` and a cloud config similar to:
-
-```yaml
-address: terrascaler.default.svc.cluster.local:8080
-grpc_timeout: 30s
-```
-
 ## Configuration
 
 The following table lists the configurable parameters of the terrascaler helm chart and their default values.
@@ -47,31 +38,51 @@ The following table lists the configurable parameters of the terrascaler helm ch
 | `serviceAccount.create` | `true` | If `true`, create a new service account |
 | `serviceAccount.annotations` | `{}` | Additional ServiceAccount annotations |
 | `serviceAccount.name` | `None` | ServiceAccount name to use |
-| `service.type` | `ClusterIP` | Kubernetes Service type |
-| `service.port` | `8080` | gRPC service port |
-| `service.annotations` | `{}` | Additional Service annotations |
+| `autoscaling.checkInterval` | `1m` | Autoscaling check interval |
+| `autoscaling.scaleUpCooldown` | `5m` | Minimum time between scale-up commits |
+| `autoscaling.pendingPodMinAge` | `30s` | Minimum age for pending pods without an Unschedulable condition |
+| `autoscaling.dryRun` | `false` | Log scale-up decisions without updating GitLab |
+| `metrics.enabled` | `true` | Expose Prometheus metrics on `/metrics` |
+| `metrics.port` | `8080` | Metrics port |
+| `metrics.service.annotations` | `{}` | Additional metrics Service annotations |
+| `metrics.podMonitor.enabled` | `false` | Create a Prometheus Operator PodMonitor |
+| `metrics.podMonitor.namespace` | same as release namespace | Namespace for the PodMonitor |
+| `metrics.podMonitor.additionalLabels` | `{}` | Additional PodMonitor labels |
+| `metrics.podMonitor.scrapeInterval` | `60s` | PodMonitor scrape interval |
+| `metrics.prometheusRule.enabled` | `false` | Create a PrometheusRule for scale-down potential |
+| `metrics.prometheusRule.namespace` | same as release namespace | Namespace for the PrometheusRule |
+| `metrics.prometheusRule.additionalLabels` | `{}` | Additional PrometheusRule labels |
+| `metrics.prometheusRule.for` | `30m` | Alert duration before firing |
+| `metrics.prometheusRule.labels` | `{severity: warning}` | Alert labels |
+| `metrics.prometheusRule.annotations` | scale-down summary and description | Alert annotations |
+| `clusterRole.create` | `true` | If `true`, create ClusterRole and ClusterRoleBinding for node/pod reads |
+| `clusterRole.name` | `None` | ClusterRole name to use |
+| `clusterRole.extraRules` | `[]` | Additional ClusterRole rules |
 | `gitlab.baseURL` | `None` | GitLab base URL; empty uses GitLab.com |
 | `gitlab.project` | `group/project` | GitLab project ID or path |
 | `gitlab.branch` | `main` | Git branch to update |
 | `gitlab.token` | `changeme` | GitLab API token; creates a Secret when set |
 | `gitlab.existingSecret` | `None` | Existing Secret containing the GitLab API token |
 | `gitlab.tokenKey` | `token` | Secret key containing the GitLab API token |
+| `gitlab.mergeRequest.enabled` | `false` | Create merge requests instead of committing directly to the target branch |
+| `gitlab.mergeRequest.branchPrefix` | `terrascaler/scale` | Source branch prefix for merge request mode |
+| `gitlab.mergeRequest.title` | `terrascaler: scale worker count` | Merge request title |
+| `gitlab.mergeRequest.description` | automated proposal text | Merge request description prefix |
+| `gitlab.mergeRequest.labels` | `[terrascaler]` | Merge request labels |
+| `gitlab.mergeRequest.assigneeIDs` | `[]` | GitLab numeric user IDs to assign |
+| `gitlab.mergeRequest.reviewerIDs` | `[]` | GitLab numeric user IDs to request review from |
+| `gitlab.mergeRequest.removeSourceBranch` | `true` | Remove source branch after merge |
 | `terraform.file` | `main.tf` | Terraform file path in the repository |
 | `terraform.blockType` | `module` | Terraform block type containing the target field |
 | `terraform.blockLabels` | `[hostedcluster]` | Terraform block labels |
 | `terraform.attribute` | `worker_count` | Terraform integer attribute to update |
-| `nodeGroup.id` | `hostedcluster-workers` | Cluster Autoscaler node group ID |
-| `nodeGroup.minSize` | `0` | Node group minimum size |
-| `nodeGroup.maxSize` | `100` | Node group maximum size |
-| `templateNode.cpu` | `2` | Template node CPU capacity |
-| `templateNode.memory` | `8Gi` | Template node memory capacity |
-| `templateNode.pods` | `110` | Template node pod capacity |
-| `templateNode.labels` | `{}` | Additional labels for the template node |
-| `tls.existingSecret` | `None` | Existing Secret containing `tls.crt` and `tls.key`; enables server TLS |
-| `tls.certKey` | `tls.crt` | TLS certificate key in `tls.existingSecret` |
-| `tls.keyKey` | `tls.key` | TLS private key key in `tls.existingSecret` |
-| `tls.clientCASecret` | `None` | Existing Secret containing a client CA bundle; enables mTLS |
-| `tls.clientCAKey` | `ca.crt` | Client CA key in `tls.clientCASecret` |
+| `scaling.minSize` | `0` | Minimum target size |
+| `scaling.maxSize` | `100` | Maximum target size |
+| `scaling.nodeSelector` | `{}` | Node labels identifying Terraform-managed workers |
+| `templateNode.cpu` | `2` | New worker CPU capacity |
+| `templateNode.memory` | `8Gi` | New worker memory capacity |
+| `templateNode.pods` | `110` | New worker pod capacity |
+| `templateNode.labels` | `{}` | Reserved metadata for new worker labels |
 | `extraArgs` | `[]` | Additional command line arguments |
 | `extraEnv` | `[]` | Additional environment variables |
 | `extraVolumes` | `[]` | Additional pod volumes |
@@ -86,6 +97,6 @@ The following table lists the configurable parameters of the terrascaler helm ch
 | `resources.requests.memory` | `64Mi` | Memory resource requests |
 | `resources.limits.cpu` | `100m` | CPU resource limits |
 | `resources.limits.memory` | `128Mi` | Memory resource limits |
-| `nodeSelector` | `{}` | Node selector properties |
+| `nodeSelector` | `{}` | Node selector properties for the Terrascaler pod |
 | `tolerations` | `[]` | Toleration properties |
 | `affinity` | `{}` | Affinity properties |

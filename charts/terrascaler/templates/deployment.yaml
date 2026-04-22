@@ -1,6 +1,3 @@
-{{- if and .Values.tls.clientCASecret (not .Values.tls.existingSecret) -}}
-{{- fail "tls.clientCASecret requires tls.existingSecret" -}}
-{{- end -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,21 +40,53 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - "--listen=:{{ .Values.service.port }}"
+            - "--check-interval={{ .Values.autoscaling.checkInterval }}"
+            - "--scale-up-cooldown={{ .Values.autoscaling.scaleUpCooldown }}"
+            - "--pending-pod-min-age={{ .Values.autoscaling.pendingPodMinAge }}"
+            {{- if .Values.metrics.enabled }}
+            - "--metrics-address=:{{ .Values.metrics.port }}"
+            {{- else }}
+            - "--metrics-address="
+            {{- end }}
             - "--gitlab-project={{ .Values.gitlab.project }}"
             - "--gitlab-branch={{ .Values.gitlab.branch }}"
+            {{- if .Values.gitlab.mergeRequest.enabled }}
+            - "--gitlab-merge-request"
+            - "--gitlab-mr-branch-prefix={{ .Values.gitlab.mergeRequest.branchPrefix }}"
+            - "--gitlab-mr-title={{ .Values.gitlab.mergeRequest.title }}"
+            - "--gitlab-mr-description={{ .Values.gitlab.mergeRequest.description }}"
+            - "--gitlab-mr-remove-source-branch={{ .Values.gitlab.mergeRequest.removeSourceBranch }}"
+            {{- if .Values.gitlab.mergeRequest.labels }}
+            - "--gitlab-mr-labels={{ join "," .Values.gitlab.mergeRequest.labels }}"
+            {{- end }}
+            {{- if .Values.gitlab.mergeRequest.assigneeIDs }}
+            - "--gitlab-mr-assignee-ids={{ join "," .Values.gitlab.mergeRequest.assigneeIDs }}"
+            {{- end }}
+            {{- if .Values.gitlab.mergeRequest.reviewerIDs }}
+            - "--gitlab-mr-reviewer-ids={{ join "," .Values.gitlab.mergeRequest.reviewerIDs }}"
+            {{- end }}
+            {{- end }}
             - "--file={{ .Values.terraform.file }}"
             - "--block-type={{ .Values.terraform.blockType }}"
             - "--block-labels={{ join "," .Values.terraform.blockLabels }}"
             - "--attribute={{ .Values.terraform.attribute }}"
-            - "--node-group-id={{ .Values.nodeGroup.id }}"
-            - "--min-size={{ .Values.nodeGroup.minSize }}"
-            - "--max-size={{ .Values.nodeGroup.maxSize }}"
+            - "--min-size={{ .Values.scaling.minSize }}"
+            - "--max-size={{ .Values.scaling.maxSize }}"
             - "--template-cpu={{ .Values.templateNode.cpu }}"
             - "--template-memory={{ .Values.templateNode.memory }}"
             - "--template-pods={{ .Values.templateNode.pods }}"
+            {{- if .Values.autoscaling.dryRun }}
+            - "--dry-run"
+            {{- end }}
             {{- if .Values.gitlab.baseURL }}
             - "--gitlab-base-url={{ .Values.gitlab.baseURL }}"
+            {{- end }}
+            {{- if .Values.scaling.nodeSelector }}
+            {{- $nodeSelector := list }}
+            {{- range $key, $value := .Values.scaling.nodeSelector }}
+            {{- $nodeSelector = append $nodeSelector (printf "%s=%s" $key $value) }}
+            {{- end }}
+            - "--node-selector={{ join "," $nodeSelector }}"
             {{- end }}
             {{- if .Values.templateNode.labels }}
             {{- $templateLabels := list }}
@@ -65,13 +94,6 @@ spec:
             {{- $templateLabels = append $templateLabels (printf "%s=%s" $key $value) }}
             {{- end }}
             - "--template-labels={{ join "," $templateLabels }}"
-            {{- end }}
-            {{- if .Values.tls.existingSecret }}
-            - "--tls-cert-file=/tls/{{ .Values.tls.certKey }}"
-            - "--tls-key-file=/tls/{{ .Values.tls.keyKey }}"
-            {{- end }}
-            {{- if .Values.tls.clientCASecret }}
-            - "--tls-client-ca-file=/client-ca/{{ .Values.tls.clientCAKey }}"
             {{- end }}
             {{- range .Values.extraArgs }}
             - {{ . | quote }}
@@ -85,40 +107,22 @@ spec:
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- if .Values.metrics.enabled }}
           ports:
-            - name: grpc
-              containerPort: {{ .Values.service.port }}
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
-          {{- if or .Values.tls.existingSecret .Values.tls.clientCASecret .Values.extraVolumeMounts }}
+          {{- end }}
+          {{- if .Values.extraVolumeMounts }}
           volumeMounts:
-            {{- if .Values.tls.existingSecret }}
-            - name: tls
-              mountPath: /tls
-              readOnly: true
-            {{- end }}
-            {{- if .Values.tls.clientCASecret }}
-            - name: client-ca
-              mountPath: /client-ca
-              readOnly: true
-            {{- end }}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if or .Values.tls.existingSecret .Values.tls.clientCASecret .Values.extraVolumes }}
+      {{- if .Values.extraVolumes }}
       volumes:
-        {{- if .Values.tls.existingSecret }}
-        - name: tls
-          secret:
-            secretName: {{ .Values.tls.existingSecret }}
-        {{- end }}
-        {{- if .Values.tls.clientCASecret }}
-        - name: client-ca
-          secret:
-            secretName: {{ .Values.tls.clientCASecret }}
-        {{- end }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

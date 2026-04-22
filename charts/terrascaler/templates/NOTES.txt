@@ -1,6 +1,3 @@
 Terrascaler is installed.
 
-Configure Cluster Autoscaler with the external gRPC cloud provider and this service address:
-
-address: {{ include "terrascaler.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
-grpc_timeout: 30s
+It will periodically inspect Kubernetes pod scheduling state and update the configured Terraform target in GitLab when more workers are needed.

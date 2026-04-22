@@ -23,10 +23,37 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-service:
-  type: ClusterIP
+autoscaling:
+  checkInterval: 1m
+  scaleUpCooldown: 5m
+  pendingPodMinAge: 30s
+  dryRun: false
+
+metrics:
+  enabled: true
   port: 8080
-  annotations: {}
+  service:
+    annotations: {}
+  podMonitor:
+    enabled: false
+    namespace:
+    additionalLabels: {}
+    scrapeInterval: 60s
+  prometheusRule:
+    enabled: false
+    namespace:
+    additionalLabels: {}
+    for: 30m
+    labels:
+      severity: warning
+    annotations:
+      summary: Terrascaler reports possible scale down capacity
+      description: Terrascaler reports {{ $value }} node(s) that may be removable. Terrascaler does not scale down automatically.
+
+clusterRole:
+  create: true
+  name: ""
+  extraRules: []
 
 gitlab:
   # GitLab base URL. Leave empty to use gitlab.com.
@@ -38,6 +65,16 @@ gitlab:
   token: changeme
   existingSecret: ""
   tokenKey: token
+  mergeRequest:
+    enabled: false
+    branchPrefix: terrascaler/scale
+    title: "terrascaler: scale worker count"
+    description: Automated Terrascaler scale-up proposal.
+    labels:
+      - terrascaler
+    assigneeIDs: []
+    reviewerIDs: []
+    removeSourceBranch: true
 
 terraform:
   # Terraform file path in the repository.
@@ -49,25 +86,16 @@ terraform:
   # Terraform integer attribute to update.
   attribute: worker_count
 
-nodeGroup:
-  id: hostedcluster-workers
+scaling:
   minSize: 0
   maxSize: 100
+  nodeSelector: {}
 
 templateNode:
   cpu: "2"
   memory: 8Gi
   pods: 110
   labels: {}
-
-tls:
-  # Existing secret containing tls.crt and tls.key. Enables server TLS when set.
-  existingSecret: ""
-  certKey: tls.crt
-  keyKey: tls.key
-  # Existing secret containing the client CA bundle. Enables mTLS when set.
-  clientCASecret: ""
-  clientCAKey: ca.crt
 
 extraArgs: []
 extraEnv: []

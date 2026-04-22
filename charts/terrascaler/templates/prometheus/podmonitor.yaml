@@ -1,0 +1,25 @@
+{{- if and .Values.metrics.enabled .Values.metrics.podMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "terrascaler.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.metrics.podMonitor.namespace }}
+  labels:
+    {{- include "terrascaler.labels" . | nindent 4 }}
+    {{- with .Values.metrics.podMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: {{ .Values.metrics.podMonitor.scrapeInterval }}
+  selector:
+    matchLabels:
+      {{- include "terrascaler.selectorLabels" . | nindent 6 }}
+  {{- if .Values.metrics.podMonitor.namespace }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  {{- end }}
+{{- end }}

@@ -67,3 +67,14 @@ Create the GitLab token secret name.
 {{- define "terrascaler.gitlabTokenSecretName" -}}
 {{- default (printf "%s-gitlab" (include "terrascaler.fullname" .)) .Values.gitlab.existingSecret }}
 {{- end -}}
+
+{{/*
+Create the name of the cluster role to use.
+*/}}
+{{- define "terrascaler.clusterRoleName" -}}
+{{- if .Values.clusterRole.create -}}
+    {{ default (include "terrascaler.fullname" .) .Values.clusterRole.name }}
+{{- else -}}
+    {{ default "default" .Values.clusterRole.name }}
+{{- end -}}
+{{- end -}}
