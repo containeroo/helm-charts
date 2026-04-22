@@ -2610,6 +2610,36 @@ entries:
         - name: Upstream Project
           url: https://github.com/containeroo/terrascaler
     apiVersion: v2
+    appVersion: v0.0.4
+    created: "2026-04-22T16:34:15.477705506Z"
+    description: Helm chart for Terrascaler
+    digest: cb05b45082acc1de4146d50e25358a650be0f8bd5ed00bc818880ebef3bd70f2
+    home: https://github.com/containeroo/terrascaler
+    keywords:
+    - autoscaler
+    - gitlab
+    - terraform
+    - opentofu
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: terrascaler
+    sources:
+    - https://github.com/containeroo/terrascaler
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.4/terrascaler-0.0.4.tgz
+    version: 0.0.4
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/terrascaler
+    apiVersion: v2
     appVersion: v0.0.3
     created: "2026-04-22T11:44:27.123904576Z"
     description: Helm chart for Terrascaler
@@ -2697,4 +2727,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-04-22T11:44:27.124093651Z"
+generated: "2026-04-22T16:34:15.47793424Z"
