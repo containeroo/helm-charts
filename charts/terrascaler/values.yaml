@@ -72,7 +72,9 @@ gitlab:
     description: Automated Terrascaler scale-up proposal.
     labels:
       - terrascaler
+    assignees: []
     assigneeIDs: []
+    reviewers: []
     reviewerIDs: []
     removeSourceBranch: true
 

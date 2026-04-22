@@ -69,7 +69,9 @@ The following table lists the configurable parameters of the terrascaler helm ch
 | `gitlab.mergeRequest.title` | `terrascaler: scale worker count` | Merge request title |
 | `gitlab.mergeRequest.description` | automated proposal text | Merge request description prefix |
 | `gitlab.mergeRequest.labels` | `[terrascaler]` | Merge request labels |
+| `gitlab.mergeRequest.assignees` | `[]` | GitLab usernames to assign |
 | `gitlab.mergeRequest.assigneeIDs` | `[]` | GitLab numeric user IDs to assign |
+| `gitlab.mergeRequest.reviewers` | `[]` | GitLab usernames to request review from |
 | `gitlab.mergeRequest.reviewerIDs` | `[]` | GitLab numeric user IDs to request review from |
 | `gitlab.mergeRequest.removeSourceBranch` | `true` | Remove source branch after merge |
 | `terraform.file` | `main.tf` | Terraform file path in the repository |

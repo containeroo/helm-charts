@@ -59,8 +59,14 @@ spec:
             {{- if .Values.gitlab.mergeRequest.labels }}
             - "--gitlab-mr-labels={{ join "," .Values.gitlab.mergeRequest.labels }}"
             {{- end }}
+            {{- if .Values.gitlab.mergeRequest.assignees }}
+            - "--gitlab-mr-assignees={{ join "," .Values.gitlab.mergeRequest.assignees }}"
+            {{- end }}
             {{- if .Values.gitlab.mergeRequest.assigneeIDs }}
             - "--gitlab-mr-assignee-ids={{ join "," .Values.gitlab.mergeRequest.assigneeIDs }}"
+            {{- end }}
+            {{- if .Values.gitlab.mergeRequest.reviewers }}
+            - "--gitlab-mr-reviewers={{ join "," .Values.gitlab.mergeRequest.reviewers }}"
             {{- end }}
             {{- if .Values.gitlab.mergeRequest.reviewerIDs }}
             - "--gitlab-mr-reviewer-ids={{ join "," .Values.gitlab.mergeRequest.reviewerIDs }}"
