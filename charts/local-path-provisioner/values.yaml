@@ -5,12 +5,12 @@ commonLabels: {}
 namespaceOverride: ""
 
 image:
-  repository: rancher/local-path-provisioner
-  tag: v0.0.35
+  repository: docker.io/rancher/local-path-provisioner
+  tag: v0.0.36
   pullPolicy: IfNotPresent
 
 helperImage:
-  repository: busybox
+  repository: docker.io/library/busybox
   tag: latest
 
 defaultSettings:
@@ -192,6 +192,9 @@ configmap:
 
 # Number of retries of failed volume deletion. 0 means retry indefinitely.
 # deletionRetryCount: 15
+
+# Enable debug logging
+debug: false
 
 # Extra arguments to pass to the CLI
 extraArgs: []
