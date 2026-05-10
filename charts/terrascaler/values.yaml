@@ -26,6 +26,8 @@ serviceAccount:
 autoscaling:
   checkInterval: 1m
   scaleUpCooldown: 5m
+  scaleDownCooldown: 10m
+  scaleDownUnneededTime: 10m
   pendingPodMinAge: 30s
   dryRun: false
 
@@ -48,7 +50,7 @@ metrics:
       severity: warning
     annotations:
       summary: Terrascaler reports possible scale down capacity
-      description: Terrascaler reports {{ $value }} node(s) that may be removable. Terrascaler does not scale down automatically.
+      description: Terrascaler reports {{ $value }} node(s) that may be removable. Alerting remains useful when scale-down candidates persist longer than expected.
 
 clusterRole:
   create: true

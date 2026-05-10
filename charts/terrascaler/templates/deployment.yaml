@@ -42,6 +42,8 @@ spec:
           args:
             - "--check-interval={{ .Values.autoscaling.checkInterval }}"
             - "--scale-up-cooldown={{ .Values.autoscaling.scaleUpCooldown }}"
+            - "--scale-down-cooldown={{ .Values.autoscaling.scaleDownCooldown }}"
+            - "--scale-down-unneeded-time={{ .Values.autoscaling.scaleDownUnneededTime }}"
             - "--pending-pod-min-age={{ .Values.autoscaling.pendingPodMinAge }}"
             {{- if .Values.metrics.enabled }}
             - "--metrics-address=:{{ .Values.metrics.port }}"

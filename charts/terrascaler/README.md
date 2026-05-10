@@ -2,7 +2,7 @@
 
 The [terrascaler chart](https://github.com/containeroo/helm-charts/tree/master/charts/terrascaler) installs Terrascaler, a reduced Kubernetes autoscaler backed by GitLab and Terraform/OpenTofu.
 
-Terrascaler watches Kubernetes nodes and pods directly. When eligible pending pods do not fit on current worker capacity, it commits a larger Terraform worker count to GitLab. The repository's GitLab CI pipeline can then apply the change and add Kubernetes worker nodes.
+Terrascaler watches Kubernetes nodes and pods directly. When eligible pending pods do not fit on current worker capacity, it commits a larger Terraform worker count to GitLab. When worker capacity stays removable long enough, it can also reduce the Terraform worker count. The repository's GitLab CI pipeline can then apply the change and add or remove Kubernetes worker nodes.
 
 ## Installation
 
@@ -40,8 +40,10 @@ The following table lists the configurable parameters of the terrascaler helm ch
 | `serviceAccount.name` | `None` | ServiceAccount name to use |
 | `autoscaling.checkInterval` | `1m` | Autoscaling check interval |
 | `autoscaling.scaleUpCooldown` | `5m` | Minimum time between scale-up commits |
+| `autoscaling.scaleDownCooldown` | `10m` | Minimum time between scale-down commits |
+| `autoscaling.scaleDownUnneededTime` | `10m` | How long removable capacity must remain stable before scaling down |
 | `autoscaling.pendingPodMinAge` | `30s` | Minimum age for pending pods without an Unschedulable condition |
-| `autoscaling.dryRun` | `false` | Log scale-up decisions without updating GitLab |
+| `autoscaling.dryRun` | `false` | Log scale decisions without updating GitLab |
 | `metrics.enabled` | `true` | Expose Prometheus metrics on `/metrics` |
 | `metrics.port` | `8080` | Metrics port |
 | `metrics.service.annotations` | `{}` | Additional metrics Service annotations |
@@ -49,7 +51,7 @@ The following table lists the configurable parameters of the terrascaler helm ch
 | `metrics.podMonitor.namespace` | same as release namespace | Namespace for the PodMonitor |
 | `metrics.podMonitor.additionalLabels` | `{}` | Additional PodMonitor labels |
 | `metrics.podMonitor.scrapeInterval` | `60s` | PodMonitor scrape interval |
-| `metrics.prometheusRule.enabled` | `false` | Create a PrometheusRule for scale-down potential |
+| `metrics.prometheusRule.enabled` | `false` | Create a PrometheusRule for persistent scale-down potential |
 | `metrics.prometheusRule.namespace` | same as release namespace | Namespace for the PrometheusRule |
 | `metrics.prometheusRule.additionalLabels` | `{}` | Additional PrometheusRule labels |
 | `metrics.prometheusRule.for` | `30m` | Alert duration before firing |
