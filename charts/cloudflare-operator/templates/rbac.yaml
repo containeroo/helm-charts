@@ -66,6 +66,7 @@ rules:
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - grpcroutes
   - httproutes
   - tlsroutes
   verbs:
@@ -75,6 +76,7 @@ rules:
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - grpcroutes/finalizers
   - httproutes/finalizers
   - tlsroutes/finalizers
   verbs:
