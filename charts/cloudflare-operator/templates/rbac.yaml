@@ -67,6 +67,7 @@ rules:
   - gateway.networking.k8s.io
   resources:
   - httproutes
+  - tlsroutes
   verbs:
   - get
   - list
@@ -75,6 +76,7 @@ rules:
   - gateway.networking.k8s.io
   resources:
   - httproutes/finalizers
+  - tlsroutes/finalizers
   verbs:
   - update
 {{- end }}
