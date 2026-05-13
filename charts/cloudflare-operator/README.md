@@ -15,9 +15,10 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `image.repository`                        | `ghcr.io/containeroo/cloudflare-operator` | Image repository                                      |
 | `image.pullPolicy`                        | `IfNotPresent`                            | Image pull policy                                     |
 | `image.tag`                               | `None`                                    | Overrides the image tag of chart `appVersion`         |
-| `image.pullSecret`                        | `None`                                    | Image pull secret                                     |
+| `imagePullSecrets`                        | `[]`                                      | Image pull secrets                                    |
 | `args`                                    | `[]`                                      | Command line arguments to pass to the container       |
 | `gatewayAPI.enabled`                      | `false`                                   | Enable Gateway API route support (CRDs required)      |
+| `nameOverride`                            | `None`                                    | Override the chart name                               |
 | `fullnameOverride`                        | `None`                                    | Override the full name of resources                   |
 | `serviceAccount.create`                   | `true`                                    | If `true`, create a new service account               |
 | `serviceAccount.annotations`              | `{}`                                      | Additional Service Account annotations                |
@@ -26,12 +27,12 @@ The following tables lists the configurable parameters of cloudflare-operator he
 | `clusterRole.name`                        | `cloudflare-operator`                     | The name of a cluster role to bind to                 |
 | `clusterRole.extraRules`                  | `[]`                                      | Additional rules to be included in the role           |
 | `podAnnotations`                          | `{}`                                      | Additional pod annotations                            |
-| `podLabels`                               | `{}`                                      | Additional pod labels                                 |
-| `securityContext`                         | `{}`                                      | Adding `securityContext` options to the pod           |
-| `resources.requests.cpu`                  | `50m`                                     | CPU resource requests for the deployment              |
-| `resources.requests.memory`               | `64Mi`                                    | Memory resource requests for the deployment           |
-| `resources.limits.cpu`                    | `None`                                    | CPU resource limits for the deployment                |
-| `resources.limits.memory`                 | `None`                                    | Memory resource limits for the deployment             |
+| `podSecurityContext`                      | `{}`                                      | Pod-level security context                            |
+| `securityContext`                         | `{}`                                      | Container-level security context                      |
+| `resources.requests.cpu`                  | `100m`                                    | CPU resource requests for the deployment              |
+| `resources.requests.memory`               | `200Mi`                                   | Memory resource requests for the deployment           |
+| `resources.limits.cpu`                    | `100m`                                    | CPU resource limits for the deployment                |
+| `resources.limits.memory`                 | `200Mi`                                   | Memory resource limits for the deployment             |
 | `metrics.podMonitor.enabled`              | `false`                                   | Enable pod monitor                                    |
 | `metrics.podMonitor.namespace`            | same as release namespace                 | Namespace for the pod monitor                         |
 | `metrics.podMonitor.additionalLabels`     | `{}`                                      | Additional labels for the pod monitor                 |
