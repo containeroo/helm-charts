@@ -1,0 +1,20 @@
+{{- if .Values.metrics.service.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "agent-forge-operator.fullname" . }}-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+    {{- with .Values.metrics.service.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+    - name: {{ .Values.metrics.service.portName }}
+      port: {{ .Values.metrics.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.metrics.service.targetPort }}
+  selector:
+    {{- include "agent-forge-operator.selectorLabels" . | nindent 4 }}
+{{- end }}

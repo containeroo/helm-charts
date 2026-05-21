@@ -1,0 +1,209 @@
+{{- if .Values.clusterRole.create -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "agent-forge-operator.clusterRoleName" . }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools
+  - vsphereagents
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools/finalizers
+  - vsphereagents/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools/status
+  - vsphereagents/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - agent-install.openshift.io
+  resources:
+  - agents
+  - infraenvs
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
+  - capi-provider.agent-install.openshift.io
+  resources:
+  - agentmachines
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cluster.x-k8s.io
+  resources:
+  - machines
+  verbs:
+  - get
+  - list
+  - watch
+{{- if .Values.clusterRole.extraRules }}
+  {{- toYaml .Values.clusterRole.extraRules | nindent 0 }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "agent-forge-operator.clusterRoleName" . }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "agent-forge-operator.clusterRoleName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "agent-forge-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- if .Values.leaderElectionRole.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "agent-forge-operator.leaderElectionRoleName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+{{- if .Values.leaderElectionRole.extraRules }}
+  {{- toYaml .Values.leaderElectionRole.extraRules | nindent 0 }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "agent-forge-operator.leaderElectionRoleName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "agent-forge-operator.leaderElectionRoleName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "agent-forge-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- if .Values.metrics.authRole.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "agent-forge-operator.metricsAuthRoleName" . }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "agent-forge-operator.metricsAuthRoleName" . }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "agent-forge-operator.metricsAuthRoleName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "agent-forge-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- if .Values.metrics.readerRole.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ default (printf "%s-metrics-reader" (include "agent-forge-operator.fullname" .)) .Values.metrics.readerRole.name }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- nonResourceURLs:
+  - "/metrics"
+  verbs:
+  - get
+{{- end }}

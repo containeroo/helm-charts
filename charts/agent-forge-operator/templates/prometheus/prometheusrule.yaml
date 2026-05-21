@@ -1,0 +1,30 @@
+{{- if .Values.metrics.prometheusRule.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "agent-forge-operator.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.metrics.prometheusRule.namespace }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+    {{- with .Values.metrics.prometheusRule.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: agent-forge-operator
+      rules:
+        - alert: AgentForgeVSphereVMOperationFailures
+          annotations:
+            summary: Agent Forge vSphere VM operations are failing
+          expr: increase(agent_forge_vsphere_vm_operations_total{result="error"}[5m]) > 0
+          for: 5m
+          labels:
+            severity: warning
+        - alert: AgentForgeISOOperationFailures
+          annotations:
+            summary: Agent Forge InfraEnv ISO operations are failing
+          expr: increase(agent_forge_iso_operations_total{result="error"}[5m]) > 0
+          for: 5m
+          labels:
+            severity: warning
+{{- end }}

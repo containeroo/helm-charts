@@ -1,0 +1,649 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.21.0
+  name: vsphereagentpools.agent-forge.containeroo.ch
+spec:
+  group: agent-forge.containeroo.ch
+  names:
+    kind: VsphereAgentPool
+    listKind: VsphereAgentPoolList
+    plural: vsphereagentpools
+    shortNames:
+    - vap
+    singular: vsphereagentpool
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.waitingAgentMachines
+      name: Waiting
+      type: integer
+    - jsonPath: .status.desiredReplicas
+      name: Desired
+      type: integer
+    - jsonPath: .status.matchingAgents
+      name: Agents
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          VsphereAgentPool is a namespace-scoped bridge between a Hypershift Agent
+          NodePool and vSphere VM inventory. It watches CAPI AgentMachine demand and
+          ensures matching Assisted Installer Agents exist for the Agent CAPI provider
+          to consume.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: VsphereAgentPoolSpec defines the desired state of VsphereAgentPool.
+            properties:
+              agent:
+                description: Agent configures Agent labels, hostname assignment, and
+                  approval.
+                properties:
+                  approve:
+                    default: true
+                    description: |-
+                      Approve controls whether matching discovered Agents are automatically
+                      patched with spec.approved=true.
+                    type: boolean
+                  labels:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Labels are required on a discovered Agent before the Agent CAPI provider
+                      can bind it to an AgentMachine. These should match the NodePool
+                      spec.platform.agent.agentLabelSelector labels.
+                    maxProperties: 32
+                    minProperties: 1
+                    type: object
+                  role:
+                    default: worker
+                    description: |-
+                      Role is the Hypershift NodePool role label value to apply to discovered
+                      Agents. For worker pools this is normally "worker".
+                    maxLength: 63
+                    minLength: 1
+                    pattern: ^[A-Za-z0-9]([A-Za-z0-9_.-]*[A-Za-z0-9])?$
+                    type: string
+                required:
+                - labels
+                type: object
+              cleanupPolicy:
+                default: Delete
+                description: |-
+                  CleanupPolicy controls whether stale vSphere VMs and unbound Assisted
+                  Installer Agents are deleted by the operator. Use Retain for conservative
+                  production rollouts where external inventory cleanup is handled manually.
+                enum:
+                - Delete
+                - Retain
+                type: string
+              controlPlaneNamespace:
+                description: |-
+                  ControlPlaneNamespace is the hosted control plane namespace that contains
+                  the CAPI AgentMachine and Machine objects rendered by Hypershift, for
+                  example demo-demo.
+                minLength: 1
+                type: string
+              hostedClusterRef:
+                description: HostedClusterRef references the Hypershift HostedCluster
+                  this pool serves.
+                properties:
+                  name:
+                    description: Name is the referenced object's metadata.name.
+                    maxLength: 253
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                required:
+                - name
+                type: object
+              infraEnvRef:
+                description: |-
+                  InfraEnvRef references the Assisted Installer InfraEnv that exposes the
+                  discovery ISO and labels newly discovered Agents.
+                properties:
+                  name:
+                    description: Name is the referenced object's metadata.name.
+                    maxLength: 253
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                required:
+                - name
+                type: object
+              iso:
+                description: ISO configures content-addressed caching of the InfraEnv
+                  discovery ISO.
+                properties:
+                  checkInterval:
+                    description: |-
+                      CheckInterval controls how often the operator downloads and hashes the
+                      InfraEnv ISO to detect content changes when the URL remains stable.
+                    type: string
+                  pathPrefix:
+                    description: |-
+                      PathPrefix is the datastore directory used for content-addressed ISO
+                      objects. When empty, the operator uses
+                      agent-forge/<namespace>/<vsphereAgentPool>.
+                    maxLength: 512
+                    pattern: ^$|^[^/\s][^\s]*$
+                    type: string
+                  retainVersions:
+                    default: 2
+                    description: |-
+                      RetainVersions controls how many content-addressed ISO objects are kept in
+                      the datastore. The current ISO is always retained.
+                    format: int32
+                    maximum: 20
+                    minimum: 1
+                    type: integer
+                type: object
+              nodePoolRef:
+                description: NodePoolRef references the Hypershift NodePool this bridge
+                  follows.
+                properties:
+                  name:
+                    description: Name is the referenced object's metadata.name.
+                    maxLength: 253
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                required:
+                - name
+                type: object
+              template:
+                description: Template configures the worker VM hardware profile.
+                properties:
+                  diskGiB:
+                    default: 100
+                    description: DiskGiB is the primary disk size in GiB.
+                    format: int32
+                    maximum: 65536
+                    minimum: 20
+                    type: integer
+                  memoryMiB:
+                    default: 16384
+                    description: MemoryMiB is the VM memory size in MiB.
+                    format: int32
+                    maximum: 1048576
+                    minimum: 1024
+                    type: integer
+                  namePrefix:
+                    description: |-
+                      NamePrefix prefixes operator-created VM names. When empty, the operator
+                      uses <hostedCluster>-<agent.role>.
+                    maxLength: 58
+                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                    type: string
+                  numCPUs:
+                    default: 4
+                    description: NumCPUs is the VM vCPU count.
+                    format: int32
+                    maximum: 128
+                    minimum: 1
+                    type: integer
+                type: object
+              vsphere:
+                description: VSphere configures placement and VM platform settings.
+                properties:
+                  credentialsSecretRef:
+                    description: |-
+                      CredentialsSecretRef references a Secret containing vSphere credentials.
+                      The Secret must contain server, username, and password keys. It may also
+                      contain an insecure key with "true" when the vCenter certificate should not
+                      be verified.
+                    properties:
+                      name:
+                        description: Name is the Secret metadata.name.
+                        maxLength: 253
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace is the Secret metadata.namespace. Leave empty to use the
+                          VsphereAgentPool namespace.
+                        maxLength: 63
+                        pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  datacenter:
+                    default: dc1
+                    description: Datacenter is the target vSphere datacenter name.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  datastoreCluster:
+                    description: |-
+                      DatastoreCluster is the datastore cluster used for VM disks. It maps to
+                      the static module's vsphere_datastore_cluster input.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  diskEagerlyScrub:
+                    description: DiskEagerlyScrub controls eager scrubbing for the
+                      primary disk.
+                    type: boolean
+                  firmware:
+                    default: efi
+                    description: Firmware is the VM firmware type.
+                    enum:
+                    - efi
+                    - bios
+                    type: string
+                  folder:
+                    description: |-
+                      Folder is the VM folder path. When empty, the operator uses the hosted
+                      cluster name.
+                    maxLength: 512
+                    type: string
+                  guestID:
+                    default: rhel9_64Guest
+                    description: GuestID is the vSphere guest OS identifier used for
+                      from-scratch VMs.
+                    maxLength: 64
+                    pattern: ^[A-Za-z0-9_.-]+$
+                    type: string
+                  isoDatastore:
+                    description: |-
+                      ISODatastore is the datastore that contains the uploaded discovery ISO.
+                      It maps to the static module's vsphere_iso_datastore input.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  network:
+                    description: Network is the vSphere network name attached to the
+                      VM NIC.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  networkAdapterType:
+                    default: vmxnet3
+                    description: NetworkAdapterType is the vSphere NIC adapter type.
+                    maxLength: 64
+                    pattern: ^[A-Za-z0-9_.-]+$
+                    type: string
+                  resourcePool:
+                    description: |-
+                      ResourcePool is the vSphere resource pool path, for example
+                      cluster/Resources.
+                    maxLength: 512
+                    minLength: 1
+                    type: string
+                  scsiType:
+                    default: pvscsi
+                    description: SCSIType is the SCSI controller type used for from-scratch
+                      VMs.
+                    maxLength: 64
+                    pattern: ^[A-Za-z0-9_.-]+$
+                    type: string
+                  vmTags:
+                    description: VMTags contains optional vSphere tag IDs to attach
+                      to each VM.
+                    items:
+                      type: string
+                    maxItems: 64
+                    type: array
+                required:
+                - credentialsSecretRef
+                - datastoreCluster
+                - isoDatastore
+                - network
+                - resourcePool
+                type: object
+            required:
+            - agent
+            - controlPlaneNamespace
+            - hostedClusterRef
+            - infraEnvRef
+            - nodePoolRef
+            - template
+            - vsphere
+            type: object
+          status:
+            description: VsphereAgentPoolStatus defines the observed state of VsphereAgentPool.
+            properties:
+              agentMachines:
+                description: |-
+                  AgentMachines is the number of non-deleting AgentMachines observed for
+                  spec.nodePoolRef in spec.controlPlaneNamespace.
+                format: int32
+                type: integer
+              agentMachinesWithoutAgent:
+                description: |-
+                  AgentMachinesWithoutAgent is the number of unready AgentMachines that do
+                  not yet have an assigned Agent. Surplus available Agents are retained
+                  while this is non-zero.
+                format: int32
+                type: integer
+              availableAgents:
+                description: AvailableAgents is the number of matching Agents not
+                  yet bound to CAPI.
+                format: int32
+                type: integer
+              boundAgents:
+                description: BoundAgents is the number of matching Agents already
+                  bound to CAPI.
+                format: int32
+                type: integer
+              conditions:
+                description: Conditions summarizes readiness, discovery, and errors.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              desiredReplicas:
+                description: DesiredReplicas is the observed AgentMachine count.
+                format: int32
+                type: integer
+              iso:
+                description: ISO records the active cached InfraEnv discovery ISO.
+                properties:
+                  checkedAt:
+                    description: CheckedAt is when the operator last downloaded and
+                      hashed the ISO.
+                    format: date-time
+                    type: string
+                  forceRefreshToken:
+                    description: |-
+                      ForceRefreshToken stores the last processed force refresh annotation
+                      value.
+                    type: string
+                  history:
+                    description: History records retained content-addressed ISO objects,
+                      newest first.
+                    items:
+                      description: ISOCacheHistoryEntry records one uploaded content-addressed
+                        ISO object.
+                      properties:
+                        path:
+                          description: Path is the datastore path to the ISO object.
+                          type: string
+                        sha256:
+                          description: SHA256 is the ISO content digest.
+                          type: string
+                        sizeBytes:
+                          description: SizeBytes is the downloaded ISO size.
+                          format: int64
+                          type: integer
+                        uploadedAt:
+                          description: UploadedAt is when this ISO object was uploaded.
+                          format: date-time
+                          type: string
+                      required:
+                      - path
+                      - sha256
+                      type: object
+                    type: array
+                  path:
+                    description: Path is the datastore path inserted into newly created
+                      VMs.
+                    type: string
+                  sha256:
+                    description: SHA256 is the content digest of the active ISO.
+                    type: string
+                  sizeBytes:
+                    description: SizeBytes is the downloaded ISO size.
+                    format: int64
+                    type: integer
+                  uploadedAt:
+                    description: UploadedAt is when the active ISO object was uploaded.
+                    format: date-time
+                    type: string
+                  url:
+                    description: URL is the InfraEnv status.isoDownloadURL used for
+                      the last check.
+                    type: string
+                type: object
+              matchingAgents:
+                description: MatchingAgents is the number of Agents matching spec.agent.labels.
+                format: int32
+                type: integer
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the most recent metadata.generation reconciled by
+                  the controller.
+                format: int64
+                type: integer
+              ownedVMs:
+                description: OwnedVMs records VMs created or tracked by this bridge.
+                items:
+                  description: OwnedVMStatus records a VM created or managed by this
+                    VsphereAgentPool.
+                  properties:
+                    agentRef:
+                      description: AgentRef points to the discovered Assisted Installer
+                        Agent, when matched.
+                      properties:
+                        apiVersion:
+                          description: API version of the referent.
+                          type: string
+                        fieldPath:
+                          description: |-
+                            If referring to a piece of an object instead of an entire object, this string
+                            should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                            For example, if the object reference is to a container within a pod, this would take on a value like:
+                            "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                            the event) or if no container name is specified "spec.containers[2]" (container with
+                            index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                            referencing a part of an object.
+                          type: string
+                        kind:
+                          description: |-
+                            Kind of the referent.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                          type: string
+                        name:
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                          type: string
+                        resourceVersion:
+                          description: |-
+                            Specific resourceVersion to which this reference is made, if any.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                          type: string
+                        uid:
+                          description: |-
+                            UID of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    biosUUID:
+                      description: BIOSUUID is the VM BIOS UUID when known.
+                      type: string
+                    lastTransitionTime:
+                      description: LastTransitionTime is updated when Phase changes.
+                      format: date-time
+                      type: string
+                    macAddress:
+                      description: MACAddress is the primary NIC MAC address normalized
+                        with hyphens.
+                      type: string
+                    machineRef:
+                      description: MachineRef points to the CAPI Machine, when bound.
+                      properties:
+                        apiVersion:
+                          description: API version of the referent.
+                          type: string
+                        fieldPath:
+                          description: |-
+                            If referring to a piece of an object instead of an entire object, this string
+                            should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+                            For example, if the object reference is to a container within a pod, this would take on a value like:
+                            "spec.containers{name}" (where "name" refers to the name of the container that triggered
+                            the event) or if no container name is specified "spec.containers[2]" (container with
+                            index 2 in this pod). This syntax is chosen only to have some well-defined way of
+                            referencing a part of an object.
+                          type: string
+                        kind:
+                          description: |-
+                            Kind of the referent.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                          type: string
+                        name:
+                          description: |-
+                            Name of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          type: string
+                        namespace:
+                          description: |-
+                            Namespace of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+                          type: string
+                        resourceVersion:
+                          description: |-
+                            Specific resourceVersion to which this reference is made, if any.
+                            More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+                          type: string
+                        uid:
+                          description: |-
+                            UID of the referent.
+                            More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+                          type: string
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    name:
+                      description: Name is the vSphere VM name.
+                      type: string
+                    phase:
+                      description: |-
+                        Phase is the current bridge view of the VM lifecycle, such as
+                        Provisioning, Available, Bound, Released, or Orphaned.
+                      type: string
+                    reason:
+                      description: Reason provides a short machine-readable explanation
+                        for Phase.
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+              plannedActions:
+                description: PlannedActions records the most recent actions planned
+                  or executed.
+                items:
+                  description: |-
+                    PlannedActionStatus records the latest create/delete/patch actions the
+                    operator planned or executed.
+                  properties:
+                    name:
+                      description: Name is the target VM or Agent name when known.
+                      type: string
+                    reason:
+                      description: Reason explains why the action is needed.
+                      type: string
+                    type:
+                      description: |-
+                        Type is the action type, such as CreateVM, DeleteVM, DeleteAgent,
+                        PatchAgent, or Noop.
+                      type: string
+                  required:
+                  - reason
+                  - type
+                  type: object
+                type: array
+              unreadyAgentMachines:
+                description: |-
+                  UnreadyAgentMachines is the number of observed AgentMachines whose Ready
+                  condition is not True. This includes AgentMachines waiting for suitable
+                  Agents and AgentMachines still installing.
+                format: int32
+                type: integer
+              waitingAgentMachines:
+                description: |-
+                  WaitingAgentMachines is the number of AgentMachines reporting
+                  Ready=False with reason NoSuitableAgents.
+                format: int32
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

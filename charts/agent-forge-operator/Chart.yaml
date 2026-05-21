@@ -1,0 +1,28 @@
+apiVersion: v2
+name: agent-forge-operator
+description: Helm chart for Agent Forge Operator
+type: application
+version: 0.1.0
+appVersion: "v0.0.16"
+keywords:
+  - operator
+  - agent-forge
+  - hypershift
+  - openshift
+  - vsphere
+home: https://github.com/containeroo/agent-forge-operator
+sources:
+  - https://github.com/containeroo/agent-forge-operator
+  - https://github.com/containeroo/helm-charts
+maintainers:
+  - name: rxbn
+    email: rxbn@containeroo.ch
+  - name: gi8
+    email: gi8@containeroo.ch
+annotations:
+  "artifacthub.io/operator": "true"
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/containeroo/helm-charts
+    - name: Upstream Project
+      url: https://github.com/containeroo/agent-forge-operator

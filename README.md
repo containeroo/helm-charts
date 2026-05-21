@@ -3,6 +3,7 @@
 This repository contains [Helm](https://helm.sh) charts for the following projects:
 
 * cloudflare-operator
+* agent-forge-operator
 * terrascaler
 * local-path-provisioner (created by Rancher)
 * nfs-client-provisioner (created by Kubernetes SIG External Storage) (DEPRECATED: use https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner instead)

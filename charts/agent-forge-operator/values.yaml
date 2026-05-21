@@ -1,0 +1,117 @@
+# Default values for agent-forge-operator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: ghcr.io/containeroo/agent-forge-operator
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# Command line arguments to pass to the container.
+args:
+  - "--leader-elect"
+  - "--health-probe-bind-address=:8081"
+  - "--metrics-bind-address=:8443"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Add additional sidecar containers to the operator pod.
+sidecars: []
+
+serviceAccount:
+  # Specifies whether a service account should be created.
+  create: true
+  # Annotations to add to the service account.
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+# Specifies whether to create a cluster role and cluster role binding for agent-forge-operator.
+clusterRole:
+  create: true
+  # The name of a cluster role to bind to; if not set and create is
+  # true, a name based on fullname is generated.
+  name: ""
+  # Additional rules to be included in the role.
+  extraRules: []
+
+# Specifies whether to create a namespaced role and role binding for leader election.
+leaderElectionRole:
+  create: true
+  # The name of the leader election role to bind to; if not set and create is
+  # true, a name based on fullname is generated.
+  name: ""
+  # Additional rules to be included in the role.
+  extraRules: []
+
+podAnnotations:
+  kubectl.kubernetes.io/default-container: agent-forge-operator
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+
+# Enable metrics monitoring of the operator.
+metrics:
+  containerPort: 8443
+  service:
+    enabled: true
+    portName: https
+    port: 8443
+    targetPort: metrics
+    additionalLabels: {}
+  authRole:
+    create: true
+    name: ""
+  readerRole:
+    create: false
+    name: ""
+  serviceMonitor:
+    enabled: false
+    # Specifies the namespace to create the ServiceMonitor in.
+    namespace:
+    # Add additional labels to the ServiceMonitor.
+    additionalLabels: {}
+    # Specifies the scrape interval for the ServiceMonitor.
+    scrapeInterval: 60s
+    scheme: https
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+  prometheusRule:
+    enabled: false
+    # Specifies the namespace to create the PrometheusRule in.
+    namespace:
+    # Add additional labels to the PrometheusRule.
+    additionalLabels: {}
+
+livenessProbe:
+  enabled: true
+
+readinessProbe:
+  enabled: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
