@@ -1,0 +1,29 @@
+{{- if and .Values.metrics.service.enabled .Values.metrics.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "filesystem-exporter.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.metrics.serviceMonitor.namespace }}
+  labels:
+    {{- include "filesystem-exporter.labels" . | nindent 4 }}
+    {{- with .Values.metrics.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+    - port: {{ .Values.metrics.service.portName }}
+      path: {{ .Values.metrics.path }}
+      interval: {{ .Values.metrics.serviceMonitor.scrapeInterval }}
+  selector:
+    matchLabels:
+      {{- include "filesystem-exporter.selectorLabels" . | nindent 6 }}
+  {{- if .Values.metrics.serviceMonitor.namespace }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  {{- end }}
+  {{- with .Values.metrics.serviceMonitor.targetLabels }}
+  targetLabels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

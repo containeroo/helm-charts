@@ -1,0 +1,48 @@
+{{- if .Values.metrics.prometheusRule.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "filesystem-exporter.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.metrics.prometheusRule.namespace }}
+  labels:
+    {{- include "filesystem-exporter.labels" . | nindent 4 }}
+    {{- with .Values.metrics.prometheusRule.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: {{ include "filesystem-exporter.fullname" . }}.rules
+      rules:
+        - alert: FilesystemExporterCollectionFailing
+          expr: max_over_time(filesystem_exporter_collect_success{root_path="{{ .Values.filesystem.path }}"}[{{ .Values.metrics.prometheusRule.collectionFailure.window }}]) < 1
+          for: {{ .Values.metrics.prometheusRule.collectionFailure.for }}
+          labels:
+            {{- toYaml .Values.metrics.prometheusRule.collectionFailure.labels | nindent 12 }}
+          annotations:
+            {{- toYaml .Values.metrics.prometheusRule.collectionFailure.annotations | nindent 12 }}
+            description: filesystem-exporter for {{ "{{" }} $labels.root_path {{ "}}" }} has failed every collection for the last {{ .Values.metrics.prometheusRule.collectionFailure.window }}.
+        - alert: FilesystemExporterCollectionStale
+          expr: time() - filesystem_exporter_collect_timestamp_seconds{root_path="{{ .Values.filesystem.path }}"} > {{ .Values.metrics.prometheusRule.collectionStale.thresholdSeconds }}
+          for: {{ .Values.metrics.prometheusRule.collectionStale.for }}
+          labels:
+            {{- toYaml .Values.metrics.prometheusRule.collectionStale.labels | nindent 12 }}
+          annotations:
+            {{- toYaml .Values.metrics.prometheusRule.collectionStale.annotations | nindent 12 }}
+            description: filesystem-exporter for {{ "{{" }} $labels.root_path {{ "}}" }} has not produced a fresh collection timestamp for more than {{ .Values.metrics.prometheusRule.collectionStale.thresholdSeconds }} seconds.
+        - alert: FilesystemUsageHigh
+          expr: filesystem_exporter_path_available_bytes{root_path="{{ .Values.filesystem.path }}",path="{{ .Values.filesystem.path }}"} / filesystem_exporter_path_capacity_bytes{root_path="{{ .Values.filesystem.path }}",path="{{ .Values.filesystem.path }}"} < {{ .Values.metrics.prometheusRule.usageHigh.threshold }}
+          for: {{ .Values.metrics.prometheusRule.usageHigh.for }}
+          labels:
+            {{- toYaml .Values.metrics.prometheusRule.usageHigh.labels | nindent 12 }}
+          annotations:
+            {{- toYaml .Values.metrics.prometheusRule.usageHigh.annotations | nindent 12 }}
+            description: Less than {{ mulf .Values.metrics.prometheusRule.usageHigh.threshold 100 }}% free space remains on {{ "{{" }} $labels.path {{ "}}" }}.
+        - alert: FilesystemUsageCritical
+          expr: filesystem_exporter_path_available_bytes{root_path="{{ .Values.filesystem.path }}",path="{{ .Values.filesystem.path }}"} / filesystem_exporter_path_capacity_bytes{root_path="{{ .Values.filesystem.path }}",path="{{ .Values.filesystem.path }}"} < {{ .Values.metrics.prometheusRule.usageCritical.threshold }}
+          for: {{ .Values.metrics.prometheusRule.usageCritical.for }}
+          labels:
+            {{- toYaml .Values.metrics.prometheusRule.usageCritical.labels | nindent 12 }}
+          annotations:
+            {{- toYaml .Values.metrics.prometheusRule.usageCritical.annotations | nindent 12 }}
+            description: Less than {{ mulf .Values.metrics.prometheusRule.usageCritical.threshold 100 }}% free space remains on {{ "{{" }} $labels.path {{ "}}" }}.
+{{- end }}

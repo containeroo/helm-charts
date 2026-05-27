@@ -1,0 +1,4 @@
+filesystem-exporter is running in namespace {{ .Release.Namespace }}.
+
+Metrics are exposed at:
+  http://{{ include "filesystem-exporter.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.metrics.service.port }}{{ .Values.metrics.path }}

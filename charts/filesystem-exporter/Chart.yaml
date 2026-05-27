@@ -1,0 +1,26 @@
+apiVersion: v2
+name: filesystem-exporter
+description: Helm chart for filesystem-exporter
+type: application
+version: 1.4.1
+appVersion: "v1.4.1"
+keywords:
+  - prometheus
+  - exporter
+  - filesystem
+  - storage
+home: https://github.com/containeroo/filesystem-exporter
+sources:
+  - https://github.com/containeroo/filesystem-exporter
+  - https://github.com/containeroo/helm-charts
+maintainers:
+  - name: rxbn
+    email: rxbn@containeroo.ch
+  - name: gi8
+    email: gi8@containeroo.ch
+annotations:
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/containeroo/helm-charts
+    - name: Upstream Project
+      url: https://github.com/containeroo/filesystem-exporter

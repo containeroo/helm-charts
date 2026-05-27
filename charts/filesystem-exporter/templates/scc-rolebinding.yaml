@@ -1,0 +1,17 @@
+{{- if .Values.openshift.hostMountAnyuidSCC.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:hostmount-anyuid
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "filesystem-exporter.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:hostmount-anyuid
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "filesystem-exporter.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
