@@ -2401,6 +2401,37 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-0.0.1/cloudflare-operator-0.0.1.tgz
     version: 0.0.1
+  filesystem-exporter:
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/filesystem-exporter
+    apiVersion: v2
+    appVersion: v1.4.1
+    created: "2026-05-27T10:47:21.0203312Z"
+    description: Helm chart for filesystem-exporter
+    digest: 35cfe330a75a51329779970ee65610a53cab00f677dd229f74df4c01e65b487b
+    home: https://github.com/containeroo/filesystem-exporter
+    keywords:
+    - prometheus
+    - exporter
+    - filesystem
+    - storage
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: filesystem-exporter
+    sources:
+    - https://github.com/containeroo/filesystem-exporter
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/filesystem-exporter-1.4.1/filesystem-exporter-1.4.1.tgz
+    version: 1.4.1
   local-path-provisioner:
   - apiVersion: v1
     appVersion: v0.0.36
@@ -2930,4 +2961,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-05-21T08:02:57.803833012Z"
+generated: "2026-05-27T10:47:21.020528677Z"
