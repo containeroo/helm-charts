@@ -8,6 +8,7 @@ This repository contains [Helm](https://helm.sh) charts for the following projec
 * local-path-provisioner (created by Rancher)
 * nfs-client-provisioner (created by Kubernetes SIG External Storage) (DEPRECATED: use https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner instead)
 * cert-manager-webhook-bluecat
+* filesystem-exporter
 
 ## Adding this Repository to Helm
 
