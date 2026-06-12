@@ -2,8 +2,8 @@ apiVersion: v2
 name: agent-forge-operator
 description: Helm chart for Agent Forge Operator
 type: application
-version: 0.1.1
-appVersion: "v0.0.17"
+version: 0.1.2
+appVersion: "v0.0.29"
 keywords:
   - operator
   - agent-forge

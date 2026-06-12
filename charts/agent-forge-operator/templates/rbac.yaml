@@ -76,6 +76,14 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - events.k8s.io
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
 {{- if .Values.clusterRole.extraRules }}
   {{- toYaml .Values.clusterRole.extraRules | nindent 0 }}
 {{- end }}

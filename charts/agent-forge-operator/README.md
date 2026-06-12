@@ -2,11 +2,10 @@
 
 The [agent-forge-operator chart](https://github.com/containeroo/helm-charts/tree/master/charts/agent-forge-operator) provides a Helm chart as a first-class method of installation on Kubernetes.
 
-The chart installs the `VsphereAgent` and `VsphereAgentPool` CRDs from the chart `crds/` directory.
-
 ## Installation
 
 ```shell
+kubectl apply --server-side -f https://github.com/containeroo/agent-forge-operator/releases/download/v0.0.29/crds.yaml
 helm repo add containeroo https://charts.containeroo.ch
 helm install agent-forge-operator containeroo/agent-forge-operator --namespace agent-forge-operator-system --create-namespace
 ```
@@ -69,4 +68,8 @@ The following table lists the configurable parameters of the agent-forge-operato
 
 ## CRD Upgrades
 
-Helm installs CRDs from the chart `crds/` directory on first install, but does not upgrade or delete CRDs during normal chart upgrades. Apply updated CRDs explicitly before upgrading between Agent Forge Operator versions that change CRD schemas.
+CRDs are published with each Agent Forge Operator release. Apply the matching release CRDs explicitly before installing or upgrading the Helm chart:
+
+```shell
+kubectl apply --server-side -f https://github.com/containeroo/agent-forge-operator/releases/download/v0.0.29/crds.yaml
+```
