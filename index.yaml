@@ -9,6 +9,38 @@ entries:
           url: https://github.com/containeroo/agent-forge-operator
       artifacthub.io/operator: "true"
     apiVersion: v2
+    appVersion: v1.0.2
+    created: "2026-06-29T15:16:56.844081823Z"
+    description: Helm chart for Agent Forge Operator
+    digest: da678b672bb0e63a282d709696322bbc827927bbae2e024cdeff8547f7105c92
+    home: https://github.com/containeroo/agent-forge-operator
+    keywords:
+    - operator
+    - agent-forge
+    - hypershift
+    - openshift
+    - vsphere
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: agent-forge-operator
+    sources:
+    - https://github.com/containeroo/agent-forge-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/agent-forge-operator-1.0.2/agent-forge-operator-1.0.2.tgz
+    version: 1.0.2
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/agent-forge-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
     appVersion: v1.0.1
     created: "2026-06-29T10:17:19.137845958Z"
     description: Helm chart for Agent Forge Operator
@@ -3185,4 +3217,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-06-29T10:17:19.138169208Z"
+generated: "2026-06-29T15:16:56.844558629Z"
