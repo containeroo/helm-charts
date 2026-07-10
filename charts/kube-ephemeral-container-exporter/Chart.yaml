@@ -1,0 +1,26 @@
+apiVersion: v2
+name: kube-ephemeral-container-exporter
+description: Exposes Prometheus metrics for Pods with attached ephemeral containers.
+type: application
+version: 0.1.0
+appVersion: "v0.0.14"
+keywords:
+  - ephemeral-containers
+  - kubernetes
+  - monitoring
+  - prometheus
+home: https://github.com/containeroo/kube-ephemeral-container-exporter
+sources:
+  - https://github.com/containeroo/kube-ephemeral-container-exporter
+  - https://github.com/containeroo/helm-charts
+maintainers:
+  - name: rxbn
+    email: rxbn@containeroo.ch
+  - name: gi8
+    email: gi8@containeroo.ch
+annotations:
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/containeroo/helm-charts
+    - name: Upstream Project
+      url: https://github.com/containeroo/kube-ephemeral-container-exporter

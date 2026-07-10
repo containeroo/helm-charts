@@ -1,0 +1,63 @@
+{{- if .Values.ciliumNetworkPolicy.enabled }}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "chart.fullname" . }}
+  namespace: {{ include "chart.namespaceName" . }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  description: "Policy for {{ include "chart.fullname" . }}"
+  endpointSelector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            {{- toYaml .Values.ciliumNetworkPolicy.prometheusPodLabels | nindent 12 }}
+            "k8s:io.kubernetes.pod.namespace": {{ .Values.ciliumNetworkPolicy.prometheusNamespace }}
+      toPorts:
+        - ports:
+            - port: "8443"
+              protocol: TCP
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            {{- toYaml .Values.ciliumNetworkPolicy.dnsPodLabels | nindent 12 }}
+            "k8s:io.kubernetes.pod.namespace": {{ .Values.ciliumNetworkPolicy.dnsNamespace }}
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: prometheus-egress-{{ include "chart.fullname" . }}
+  namespace: {{ .Values.ciliumNetworkPolicy.prometheusNamespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  description: "Policy for prometheus-egress-{{ include "chart.fullname" . }}"
+  endpointSelector:
+    matchLabels:
+      {{- toYaml .Values.ciliumNetworkPolicy.prometheusPodLabels | nindent 6 }}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            {{- include "chart.selectorLabels" . | nindent 12 }}
+            "k8s:io.kubernetes.pod.namespace": {{ include "chart.namespaceName" . }}
+      toPorts:
+        - ports:
+            - port: "8443"
+{{- end }}

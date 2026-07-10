@@ -1,0 +1,40 @@
+{{- if and .Values.metrics.enabled .Values.metrics.prometheusRule.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "chart.prometheusRuleName" . }}
+  namespace: {{ default (include "chart.namespaceName" .) .Values.metrics.prometheusRule.namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    {{- with .Values.metrics.prometheusRule.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: kube-ephemeral-container-exporter-alerts
+      rules:
+        {{- if .Values.metrics.prometheusRule.exporterDown.enabled }}
+        - alert: EphemeralContainersExporterDown
+          expr: |
+            absent(up{job="kube-ephemeral-container-exporter"}) or
+            max_over_time(up{job="kube-ephemeral-container-exporter"}[{{ .Values.metrics.prometheusRule.exporterDown.lookback }}]) < 1
+          for: {{ .Values.metrics.prometheusRule.exporterDown.for }}
+          labels:
+            severity: {{ .Values.metrics.prometheusRule.exporterDown.severity | quote }}
+          annotations:
+            summary: kube-ephemeral-container-exporter is unavailable
+            description: kube-ephemeral-container-exporter has not exposed a healthy scrape target for the last {{ .Values.metrics.prometheusRule.exporterDown.lookback }}.
+        {{- end }}
+        {{- if .Values.metrics.prometheusRule.longRunning.enabled }}
+        - alert: EphemeralContainerRunningTooLong
+          expr: kube_pod_ephemeral_container_running_present > 0
+          for: {{ .Values.metrics.prometheusRule.longRunning.for }}
+          labels:
+            severity: {{ .Values.metrics.prometheusRule.longRunning.severity | quote }}
+          annotations:
+            summary: Ephemeral container running too long
+            description: >-
+              Pod {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod }}" }} has had at least one running ephemeral container for more than {{ .Values.metrics.prometheusRule.longRunning.for }}.
+        {{- end }}
+{{- end }}

@@ -1,0 +1,124 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}
+  namespace: {{ include "chart.namespaceName" . }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "chart.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: kube-ephemeral-container-exporter
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.env }}
+          env:
+            {{- range . }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- end }}
+          ports:
+            {{- if .Values.metrics.enabled }}
+            - name: metrics
+              containerPort: 8443
+              protocol: TCP
+            {{- end }}
+            - name: probes
+              containerPort: 8081
+              protocol: TCP
+          args:
+            {{- if not .Values.metrics.enabled }}
+            - --metrics-enabled=false
+            {{- end }}
+            {{- if .Values.metrics.address }}
+            - --metrics-bind-address={{ .Values.metrics.address }}
+            {{- end }}
+            {{- if not .Values.metrics.secure }}
+            - --metrics-secure=false
+            {{- end }}
+            {{- if .Values.probes.address }}
+            - --health-probe-bind-address={{ .Values.probes.address }}
+            {{- end }}
+            {{- if .Values.server.enableHTTP2 }}
+            - --enable-http2
+            {{- end }}
+            {{- if not .Values.leaderElection.enabled }}
+            - --leader-elect=false
+            {{- end }}
+            {{- if .Values.watchNamespaces }}
+            {{- range .Values.watchNamespaces }}
+            - --watch-namespace={{ . }}
+            {{- end }}
+            {{- end }}
+            {{- if ne .Values.logging.format "json" }}
+            - --log-encoder={{ .Values.logging.format }}
+            {{- end }}
+            {{- if .Values.logging.devel }}
+            - --log-devel
+            {{- end }}
+            {{- if ne .Values.logging.stacktraceLevel "panic" }}
+            - --log-stacktrace-level={{ .Values.logging.stacktraceLevel }}
+            {{- end }}
+            {{- range .Values.extraArgs }}
+            - {{ . }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            {{- toYaml .Values.startupProbe.spec | nindent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe.spec | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe.spec | nindent 12 }}
+          {{- end }}
+        {{- if .Values.sidecars }}
+        {{- toYaml .Values.sidecars | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}

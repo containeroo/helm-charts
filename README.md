@@ -7,9 +7,13 @@ This repository contains [Helm](https://helm.sh) charts for the following projec
 * agent-forge-operator
 * terrascaler
 * local-path-provisioner (created by Rancher)
-* nfs-client-provisioner (created by Kubernetes SIG External Storage) (DEPRECATED: use https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner instead)
+* nfs-client-provisioner (created by Kubernetes SIG External Storage)
+  (DEPRECATED: use
+  [nfs-subdir-external-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)
+  instead)
 * cert-manager-webhook-bluecat
 * filesystem-exporter
+* kube-ephemeral-container-exporter
 
 ## Adding this Repository to Helm
 

@@ -1,0 +1,16 @@
+{{- if and .Values.metrics.enabled .Values.metrics.service.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chart.metricsServiceName" . }}
+  namespace: {{ include "chart.namespaceName" . }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.metrics.service.type }}
+  selector:
+    {{- include "chart.selectorLabels" . | nindent 4 }}
+  ports:
+    {{- toYaml .Values.metrics.service.ports | nindent 4 }}
+{{- end }}

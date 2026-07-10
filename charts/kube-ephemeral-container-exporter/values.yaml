@@ -1,0 +1,149 @@
+# Default values for kube-ephemeral-container-exporter.
+
+image:
+  repository: ghcr.io/containeroo/kube-ephemeral-container-exporter
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+namespace:
+  create: false
+  name: ""
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+
+replicas: 1
+terminationGracePeriodSeconds: 10
+
+sidecars: []
+
+podAnnotations:
+  kubectl.kubernetes.io/default-container: kube-ephemeral-container-exporter
+
+podLabels: {}
+
+nodeSelector: {}
+
+tolerations: []
+affinity: {}
+
+watchNamespaces: []
+
+probes:
+  # override default health and readiness probe bind address
+  # address: ":8081"
+  address: ""
+
+server:
+  enableHTTP2: false
+
+startupProbe:
+  enabled: false
+  spec:
+    httpGet:
+      path: /healthz
+      port: probes
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+livenessProbe:
+  enabled: true
+  spec:
+    httpGet:
+      path: /healthz
+      port: probes
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+readinessProbe:
+  enabled: true
+  spec:
+    httpGet:
+      path: /readyz
+      port: probes
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+podSecurityContext:
+  runAsNonRoot: true
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+metrics:
+  enabled: true
+  # override default metrics listen address
+  # address: ":8443"
+  address: ""
+  secure: false
+  service:
+    enabled: true
+    type: ClusterIP
+    ports:
+      - name: metrics
+        port: 8443
+        protocol: TCP
+        targetPort: metrics
+  serviceMonitor:
+    enabled: false
+    jobLabel: app.kubernetes.io/name
+  prometheusRule:
+    enabled: false
+    # Empty uses the release namespace.
+    namespace: ""
+    additionalLabels: {}
+    exporterDown:
+      enabled: true
+      lookback: 15m
+      for: 5m
+      severity: warning
+    longRunning:
+      enabled: true
+      for: 1h
+      severity: warning
+
+clusterRole:
+  create: true
+  name: ""
+  extraRules: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+leaderElection:
+  enabled: true
+
+logging:
+  format: json
+  stacktraceLevel: panic
+  devel: false
+
+env: []
+
+extraArgs: []
+
+extraObjects: []
+
+ciliumNetworkPolicy:
+  enabled: false
+  prometheusNamespace: observability
+  prometheusPodLabels:
+    app.kubernetes.io/instance: kube-prometheus-stack-prometheus
+    app.kubernetes.io/name: prometheus
+  dnsNamespace: kube-system
+  dnsPodLabels:
+    k8s-app: kube-dns
