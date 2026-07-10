@@ -1,0 +1,38 @@
+{{- if and .Values.metrics.enabled .Values.metrics.prometheusRule.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "chart.fullname" . }}-alerts
+  namespace: {{ .Values.metrics.prometheusRule.namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    {{- with .Values.metrics.prometheusRule.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+  - name: autovpa-alerts
+    rules:
+      - alert: AutoVPAMetricsMissing
+        expr: |
+          absent(autovpavpa_created_total)
+          or absent(autovpavpa_updated_total)
+          or absent(autovpavpa_skipped_total)
+        for: 5m
+        labels:
+          severity: {{ .Values.metrics.prometheusRule.severity }}
+        annotations:
+          summary: AutoVPA metrics missing
+          description: AutoVPA metrics are not being scraped for {{ "{{ $labels.job }}" }}.
+      - alert: AutoVPASkipsDetected
+        expr: increase(autovpavpa_skipped_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: {{ .Values.metrics.prometheusRule.severity }}
+        annotations:
+          summary: AutoVPA is skipping workloads
+          description: >-
+            AutoVPA skipped {{ "{{ $value }}" }} workload reconciliations in the last 5m
+            (reason={{ "{{ $labels.reason }}" }}).
+{{- end }}

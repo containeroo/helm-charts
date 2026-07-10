@@ -1,0 +1,15 @@
+{{- if .Values.profile.configMap.create }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "chart.profileConfigMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+data:
+  {{ .Values.profile.configMap.key | quote }}: |
+    defaultProfile: {{ .Values.profile.defaultProfile | quote }}
+    profiles:
+      {{- toYaml .Values.profile.profiles | nindent 6 }}
+{{- end }}

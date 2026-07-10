@@ -1,0 +1,194 @@
+# Default values for autovpa.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: ghcr.io/containeroo/autovpa
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Profile and annotation settings
+profile:
+  path: /etc/autovpa/config.yaml
+  annotation: autovpa.containeroo.ch/profile
+  managedLabel: autovpa.containeroo.ch/managed
+  nameTemplate: "{{ .WorkloadName }}-{{ .Profile }}-vpa"
+  # Create and mount a ConfigMap containing the profiles below. To use an
+  # existing ConfigMap, set create to false and name to its name.
+  configMap:
+    create: true
+    name: ""
+    key: config.yaml
+  defaultProfile: default
+  profiles:
+    default:
+      updatePolicy:
+        updateMode: "Off"
+      resourcePolicy:
+        containerPolicies:
+          - containerName: "*"
+            controlledResources:
+              - cpu
+              - memory
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 100m
+    memory: 200Mi
+  requests:
+    cpu: 100m
+    memory: 200Mi
+
+replicas: 1
+
+sidecars: []
+# Add additional sidecar containers to the operator pod
+# e.g:
+# sidecars:
+#   - name: kubectl
+#     image: ghcr.io/containeroo/kubectl-distroless:latest
+#     imagePullPolicy: Always
+#
+
+podAnnotations: {}
+
+podLabels: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+startupProbe:
+  enabled: true
+  # customize the startup probe
+  spec:
+    httpGet:
+      path: /healthz
+      port: 8081
+    failureThreshold: 30
+    periodSeconds: 2
+
+livenessProbe:
+  enabled: true
+  # customize the liveness probe
+  spec:
+    httpGet:
+      path: /healthz
+      port: 8081
+    periodSeconds: 20
+
+readinessProbe:
+  enabled: true
+  # customize the readiness probe
+  spec:
+    httpGet:
+      path: /readyz
+      port: 8081
+    periodSeconds: 10
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Enable metrics monitoring of the operator
+metrics:
+  enabled: true
+  # override default metrics listen address
+  # address: ":8443"
+  # Enable the metrics-server serviceMonitor
+  service:
+    enabled: true
+    type: ClusterIP
+    ports:
+      - name: https
+        port: 8443
+        protocol: TCP
+        targetPort: 8443
+  serviceMonitor:
+    enabled: true
+  # Specifies whether to create a PrometheusRule for the operator
+  prometheusRule:
+    enabled: true
+    # Specifies the namespace to create the PrometheusRule in
+    namespace: monitoring
+    # Severity of the PrometheusRule
+    severity: critical
+    # Add additional labels to the PrometheusRule
+    additionalLabels: {}
+
+# Specifies whether to create a cluster role & cluster role binding for autovpa
+clusterRole:
+  create: true
+  # The name of a cluster role to bind to; if not set and create is
+  # true, a name based on fullname is generated
+  name: ""
+  # Additional rules to be included in the role
+  # e.g:
+  # extraRules:
+  # - apiGroups:
+  #   - ""
+  #   resources:
+  #   - services
+  #   verbs:
+  #   - get
+  #   - list
+  #   - watch
+  #
+  extraRules: []
+
+# Create a namespace-scoped Role and RoleBinding instead of, or in addition
+# to, the cluster-wide RBAC above. Cluster-wide RBAC remains the default.
+role:
+  create: false
+  name: ""
+  extraRules: []
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Extra objects to be deployed by the helm chart
+extraObjects: []
+
+# Enable leader election for the operator
+leaderElection:
+  enabled: true
+
+# Custom logging configuration
+logging:
+  format: json # available options: json, console
+
+# Add custom environment variables to the operator pod
+env:
+  - name: TZ
+    value: Europe/Zurich
+
+# extra arguments for the application (appended to the defaults)
+extraArgs: []
+# Example:
+# extraArgs:
+#   - --metrics-secure=false
+#   - --metrics-bind-address=:8443

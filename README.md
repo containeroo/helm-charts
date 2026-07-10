@@ -2,6 +2,7 @@
 
 This repository contains [Helm](https://helm.sh) charts for the following projects:
 
+* autovpa
 * cloudflare-operator
 * agent-forge-operator
 * terrascaler
