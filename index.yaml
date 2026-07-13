@@ -299,6 +299,37 @@ entries:
       artifacthub.io/operator: "true"
     apiVersion: v2
     appVersion: v0.0.34
+    created: "2026-07-13T10:26:13.859007617Z"
+    description: AutoVPA ensures workloads annotated with a profile get a matching
+      VerticalPodAutoscaler.
+    digest: ac8f1473b5ea3f42d2ce536ba82abc28a42b94731424be26646a755407fa2f32
+    home: https://github.com/containeroo/autovpa
+    keywords:
+    - autoscaling
+    - operator
+    - vertical-pod-autoscaler
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: autovpa
+    sources:
+    - https://github.com/containeroo/autovpa
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/autovpa-0.3.0/autovpa-0.3.0.tgz
+    version: 0.3.0
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/autovpa
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: v0.0.34
     created: "2026-07-13T08:02:03.862236905Z"
     description: AutoVPA ensures workloads annotated with a profile get a matching
       VerticalPodAutoscaler.
@@ -2760,6 +2791,36 @@ entries:
           url: https://github.com/containeroo/kube-ephemeral-container-exporter
     apiVersion: v2
     appVersion: v0.0.14
+    created: "2026-07-13T10:26:13.976258271Z"
+    description: Exposes Prometheus metrics for Pods with attached ephemeral containers.
+    digest: ade539b5b43c612c7cd809dba1ffcc261b3c1ad9443ade799ca4accc7168923b
+    home: https://github.com/containeroo/kube-ephemeral-container-exporter
+    keywords:
+    - ephemeral-containers
+    - kubernetes
+    - monitoring
+    - prometheus
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: kube-ephemeral-container-exporter
+    sources:
+    - https://github.com/containeroo/kube-ephemeral-container-exporter
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/kube-ephemeral-container-exporter-0.1.1/kube-ephemeral-container-exporter-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/kube-ephemeral-container-exporter
+    apiVersion: v2
+    appVersion: v0.0.14
     created: "2026-07-10T15:25:50.988111186Z"
     description: Exposes Prometheus metrics for Pods with attached ephemeral containers.
     digest: bb01fa7ddba77b817330455493f825f87dd89ad361d83c39ee0f9af007892ea3
@@ -3311,4 +3372,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-07-13T08:02:03.862781301Z"
+generated: "2026-07-13T10:26:13.976460251Z"
