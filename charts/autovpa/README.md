@@ -35,6 +35,20 @@ helm upgrade --install autovpa containeroo/autovpa
 
 ---
 
+## Watch Scope
+
+| Key                      | Description                                                       | Default Value |
+| ------------------------ | ----------------------------------------------------------------- | ------------- |
+| `watch.currentNamespace` | Watch only the Helm release namespace.                            | `false`       |
+| `watch.namespaces`       | Namespaces to watch; one Role and RoleBinding is created in each. | `[]`          |
+
+When either namespace-scoped option is configured, the chart omits the controller
+ClusterRole and ClusterRoleBinding and creates namespace-scoped controller RBAC.
+The metrics authentication RBAC remains independently controlled by
+`metrics.rbac.create` because Kubernetes authentication reviews are cluster-scoped.
+
+---
+
 ## Profile & annotations
 
 | Key                        | Description                                   | Default Value                            |
@@ -102,17 +116,17 @@ helm upgrade --install autovpa containeroo/autovpa
 
 ## RBAC and Service Account
 
-| Key                          | Description                                 | Default Value |
-| ---------------------------- | ------------------------------------------- | ------------- |
-| `clusterRole.create`         | Create a ClusterRole and binding.           | `true`        |
-| `clusterRole.name`           | Custom name for the ClusterRole.            | `""`          |
-| `clusterRole.extraRules`     | Additional RBAC rules for the ClusterRole.  | `[]`          |
-| `role.create`                | Create a namespace-scoped Role and binding. | `false`       |
-| `role.name`                  | Custom name for the Role.                   | `""`          |
-| `role.extraRules`            | Additional RBAC rules for the Role.         | `[]`          |
-| `serviceAccount.create`      | Create a ServiceAccount.                    | `true`        |
-| `serviceAccount.annotations` | Annotations for the ServiceAccount.         | `{}`          |
-| `serviceAccount.name`        | Custom name for the ServiceAccount.         | `""`          |
+| Key                          | Description                                          | Default Value |
+| ---------------------------- | ---------------------------------------------------- | ------------- |
+| `clusterRole.create`         | Create controller cluster RBAC in cluster-wide mode. | `true`        |
+| `clusterRole.name`           | Custom name for the ClusterRole.                     | `""`          |
+| `clusterRole.extraRules`     | Additional RBAC rules for the ClusterRole.           | `[]`          |
+| `role.create`                | Explicitly create namespace-scoped controller RBAC.  | `false`       |
+| `role.name`                  | Custom name for the Role.                            | `""`          |
+| `role.extraRules`            | Additional RBAC rules for the Role.                  | `[]`          |
+| `serviceAccount.create`      | Create a ServiceAccount.                             | `true`        |
+| `serviceAccount.annotations` | Annotations for the ServiceAccount.                  | `{}`          |
+| `serviceAccount.name`        | Custom name for the ServiceAccount.                  | `""`          |
 
 ---
 

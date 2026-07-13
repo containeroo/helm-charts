@@ -1,4 +1,5 @@
-{{- if .Values.clusterRole.create }}
+{{- $namespacedWatch := or .Values.watch.currentNamespace (gt (len .Values.watch.namespaces) 0) -}}
+{{- if and .Values.clusterRole.create (not $namespacedWatch) }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -28,34 +29,42 @@ subjects:
     namespace: {{ .Release.Namespace }}
 {{- end }}
 
-{{- if .Values.role.create }}
+{{- if or .Values.role.create $namespacedWatch }}
+{{- $namespaces := .Values.watch.namespaces }}
+{{- if .Values.watch.currentNamespace }}
+{{- $namespaces = list .Release.Namespace }}
+{{- else if eq (len $namespaces) 0 }}
+{{- $namespaces = list .Release.Namespace }}
+{{- end }}
+{{- range $namespace := $namespaces }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "chart.roleName" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "chart.roleName" $ }}
+  namespace: {{ $namespace }}
   labels:
-    {{- include "chart.labels" . | nindent 4 }}
+    {{- include "chart.labels" $ | nindent 4 }}
 rules:
-  {{- include "chart.controllerRules" . | nindent 2 }}
-  {{- with .Values.role.extraRules }}
+  {{- include "chart.controllerRules" $ | nindent 2 }}
+  {{- with $.Values.role.extraRules }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "chart.roleName" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "chart.roleName" $ }}
+  namespace: {{ $namespace }}
   labels:
-    {{- include "chart.labels" . | nindent 4 }}
+    {{- include "chart.labels" $ | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "chart.roleName" . }}
+  name: {{ include "chart.roleName" $ }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "chart.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    name: {{ include "chart.serviceAccountName" $ }}
+    namespace: {{ $.Release.Namespace }}
+{{- end }}
 {{- end }}

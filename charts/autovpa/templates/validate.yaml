@@ -1,0 +1,3 @@
+{{- if and .Values.watch.currentNamespace (gt (len .Values.watch.namespaces) 0) -}}
+{{- fail "watch.currentNamespace and watch.namespaces are mutually exclusive" -}}
+{{- end -}}

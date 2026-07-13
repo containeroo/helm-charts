@@ -12,6 +12,12 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Namespace scope for workload and VPA watches. By default the operator watches
+# the whole cluster. currentNamespace and namespaces are mutually exclusive.
+watch:
+  currentNamespace: false
+  namespaces: []
+
 # Profile and annotation settings
 profile:
   path: /etc/autovpa/config.yaml
@@ -139,7 +145,8 @@ metrics:
     # Add additional labels to the PrometheusRule
     additionalLabels: {}
 
-# Specifies whether to create a cluster role & cluster role binding for autovpa
+# Creates controller cluster RBAC in cluster-wide mode. It is automatically
+# omitted when a namespace-scoped watch is configured above.
 clusterRole:
   create: true
   # The name of a cluster role to bind to; if not set and create is
@@ -159,8 +166,8 @@ clusterRole:
   #
   extraRules: []
 
-# Create a namespace-scoped Role and RoleBinding instead of, or in addition
-# to, the cluster-wide RBAC above. Cluster-wide RBAC remains the default.
+# Explicitly create controller namespace RBAC. Namespace-scoped watch modes
+# enable this automatically for every watched namespace.
 role:
   create: false
   name: ""

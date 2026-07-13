@@ -39,9 +39,14 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            {{- range .Values.env }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+            {{- if .Values.watch.currentNamespace }}
+            - name: AUTO_VPA_WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            {{- end }}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             {{- if .Values.metrics.enabled }}
@@ -58,6 +63,9 @@ spec:
             {{- end }}
             {{- if .Values.leaderElection.enabled }}
             - --leader-elect
+            {{- end }}
+            {{- range .Values.watch.namespaces }}
+            - --watch-namespace={{ . }}
             {{- end }}
             - --config={{ .Values.profile.path }}
             - --profile-annotation={{ .Values.profile.annotation }}
