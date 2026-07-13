@@ -1,9 +1,9 @@
-{{- if .Values.metrics.enabled }}
+{{- if and .Values.metrics.enabled .Values.metrics.rbac.create }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "chart.fullname" . }}-metrics-auth
+  name: {{ include "chart.metricsAuthRoleName" . }}
   labels:
     {{- include "chart.labels" . | nindent 4 }}
 rules:
@@ -17,13 +17,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "chart.fullname" . }}-metrics-auth
+  name: {{ include "chart.metricsAuthRoleName" . }}
   labels:
     {{- include "chart.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "chart.fullname" . }}-metrics-auth
+  name: {{ include "chart.metricsAuthRoleName" . }}
 subjects:
   - kind: ServiceAccount
     name: {{ include "chart.serviceAccountName" . }}

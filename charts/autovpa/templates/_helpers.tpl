@@ -87,6 +87,13 @@ Create the name of the profile ConfigMap to use.
 {{- default (printf "%s-profiles" (include "chart.fullname" .)) .Values.profile.configMap.name -}}
 {{- end -}}
 
+{{/*
+Create the name of the metrics authentication ClusterRole and binding.
+*/}}
+{{- define "chart.metricsAuthRoleName" -}}
+{{- default (printf "%s-metrics-auth" (include "chart.fullname" .)) .Values.metrics.rbac.name -}}
+{{- end -}}
+
 {{/* Controller permissions shared by ClusterRole and Role modes. */}}
 {{- define "chart.controllerRules" -}}
 - apiGroups: [""]

@@ -37,17 +37,17 @@ helm upgrade --install autovpa containeroo/autovpa
 
 ## Profile & annotations
 
-| Key                    | Description                                   | Default Value                    |
-| ---------------------- | --------------------------------------------- | -------------------------------- |
-| `profile.path`         | Path to the profiles file in the container.   | `/etc/autovpa/config.yaml`       |
-| `profile.annotation`   | Workload annotation used to select a profile. | `autovpa.containeroo.ch/profile` |
-| `profile.managedLabel` | Label applied to managed VPAs.                | `autovpa.containeroo.ch/managed` |
-| `profile.nameTemplate` | Template for VPA names.                       | `{{ .WorkloadName }}-{{ .Profile }}-vpa` |
-| `profile.configMap.create` | Create and mount a profile ConfigMap.      | `true`                           |
-| `profile.configMap.name` | Existing/custom profile ConfigMap name.      | `""`                             |
-| `profile.configMap.key` | Key containing the profile configuration.     | `config.yaml`                    |
-| `profile.defaultProfile` | Name of the default profile.                 | `default`                        |
-| `profile.profiles` | Profile definitions written to the ConfigMap.       | Default profile with `Off` mode  |
+| Key                        | Description                                   | Default Value                            |
+| -------------------------- | --------------------------------------------- | ---------------------------------------- |
+| `profile.path`             | Path to the profiles file in the container.   | `/etc/autovpa/config.yaml`               |
+| `profile.annotation`       | Workload annotation used to select a profile. | `autovpa.containeroo.ch/profile`         |
+| `profile.managedLabel`     | Label applied to managed VPAs.                | `autovpa.containeroo.ch/managed`         |
+| `profile.nameTemplate`     | Template for VPA names.                       | `{{ .WorkloadName }}-{{ .Profile }}-vpa` |
+| `profile.configMap.create` | Create and mount a profile ConfigMap.         | `true`                                   |
+| `profile.configMap.name`   | Existing/custom profile ConfigMap name.       | `""`                                     |
+| `profile.configMap.key`    | Key containing the profile configuration.     | `config.yaml`                            |
+| `profile.defaultProfile`   | Name of the default profile.                  | `default`                                |
+| `profile.profiles`         | Profile definitions written to the ConfigMap. | Default profile with `Off` mode          |
 
 ---
 
@@ -86,31 +86,33 @@ helm upgrade --install autovpa containeroo/autovpa
 
 ## Metrics Configuration
 
-| Key                                       | Description                             | Default Value       |
-| ----------------------------------------- | --------------------------------------- | ------------------- |
-| `metrics.enabled`                         | Enable metrics collection.              | `true`              |
-| `metrics.service.type`                    | Metrics service type.                   | `ClusterIP`         |
-| `metrics.service.ports`                   | Ports for the metrics service.          | See default values. |
-| `metrics.prometheusRule.enabled`          | Enable Prometheus rules for alerts.     | `true`              |
-| `metrics.prometheusRule.namespace`        | Namespace for Prometheus rules.         | `monitoring`        |
-| `metrics.prometheusRule.severity`         | Severity of alerts.                     | `critical`          |
-| `metrics.prometheusRule.additionalLabels` | Additional labels for Prometheus rules. | `{}`                |
+| Key                                       | Description                                 | Default Value       |
+| ----------------------------------------- | ------------------------------------------- | ------------------- |
+| `metrics.enabled`                         | Enable metrics collection.                  | `true`              |
+| `metrics.rbac.create`                     | Create metrics authentication cluster RBAC. | `true`              |
+| `metrics.rbac.name`                       | Custom metrics authentication RBAC name.    | `""`                |
+| `metrics.service.type`                    | Metrics service type.                       | `ClusterIP`         |
+| `metrics.service.ports`                   | Ports for the metrics service.              | See default values. |
+| `metrics.prometheusRule.enabled`          | Enable Prometheus rules for alerts.         | `true`              |
+| `metrics.prometheusRule.namespace`        | Namespace for Prometheus rules.             | `monitoring`        |
+| `metrics.prometheusRule.severity`         | Severity of alerts.                         | `critical`          |
+| `metrics.prometheusRule.additionalLabels` | Additional labels for Prometheus rules.     | `{}`                |
 
 ---
 
 ## RBAC and Service Account
 
-| Key                          | Description                                | Default Value |
-| ---------------------------- | ------------------------------------------ | ------------- |
-| `clusterRole.create`         | Create a ClusterRole and binding.          | `true`        |
-| `clusterRole.name`           | Custom name for the ClusterRole.           | `""`          |
-| `clusterRole.extraRules`     | Additional RBAC rules for the ClusterRole. | `[]`          |
+| Key                          | Description                                 | Default Value |
+| ---------------------------- | ------------------------------------------- | ------------- |
+| `clusterRole.create`         | Create a ClusterRole and binding.           | `true`        |
+| `clusterRole.name`           | Custom name for the ClusterRole.            | `""`          |
+| `clusterRole.extraRules`     | Additional RBAC rules for the ClusterRole.  | `[]`          |
 | `role.create`                | Create a namespace-scoped Role and binding. | `false`       |
-| `role.name`                  | Custom name for the Role.                    | `""`          |
-| `role.extraRules`            | Additional RBAC rules for the Role.          | `[]`          |
-| `serviceAccount.create`      | Create a ServiceAccount.                   | `true`        |
-| `serviceAccount.annotations` | Annotations for the ServiceAccount.        | `{}`          |
-| `serviceAccount.name`        | Custom name for the ServiceAccount.        | `""`          |
+| `role.name`                  | Custom name for the Role.                   | `""`          |
+| `role.extraRules`            | Additional RBAC rules for the Role.         | `[]`          |
+| `serviceAccount.create`      | Create a ServiceAccount.                    | `true`        |
+| `serviceAccount.annotations` | Annotations for the ServiceAccount.         | `{}`          |
+| `serviceAccount.name`        | Custom name for the ServiceAccount.         | `""`          |
 
 ---
 

@@ -111,6 +111,11 @@ securityContext: {}
 # Enable metrics monitoring of the operator
 metrics:
   enabled: true
+  # Create the ClusterRole and ClusterRoleBinding used by the secure metrics
+  # endpoint for TokenReview and SubjectAccessReview requests.
+  rbac:
+    create: true
+    name: ""
   # override default metrics listen address
   # address: ":8443"
   # Enable the metrics-server serviceMonitor
