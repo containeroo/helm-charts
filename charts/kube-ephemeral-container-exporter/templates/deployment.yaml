@@ -77,9 +77,7 @@ spec:
             {{- if .Values.server.enableHTTP2 }}
             - --enable-http2
             {{- end }}
-            {{- if not .Values.leaderElection.enabled }}
-            - --leader-elect=false
-            {{- end }}
+            - --leader-elect={{ .Values.leaderElection.enabled }}
             {{- range .Values.watch.namespaces }}
             - --watch-namespace={{ . }}
             {{- end }}

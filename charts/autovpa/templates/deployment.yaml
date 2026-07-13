@@ -61,9 +61,7 @@ spec:
             {{- if not .Values.metrics.enabled }}
             - --metrics-enabled=false
             {{- end }}
-            {{- if .Values.leaderElection.enabled }}
-            - --leader-elect
-            {{- end }}
+            - --leader-elect={{ .Values.leaderElection.enabled }}
             {{- range .Values.watch.namespaces }}
             - --watch-namespace={{ . }}
             {{- end }}
