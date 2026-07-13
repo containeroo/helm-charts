@@ -65,6 +65,13 @@ Create the name of the cluster role to use.
 {{- end -}}
 
 {{/*
+Create the name of the namespace role to use.
+*/}}
+{{- define "chart.roleName" -}}
+{{- default (printf "%s-manager" (include "chart.fullname" .)) .Values.role.name -}}
+{{- end -}}
+
+{{/*
 Resolve the namespace to use for namespaced objects.
 */}}
 {{- define "chart.namespaceName" -}}
@@ -104,4 +111,14 @@ PrometheusRule name.
 */}}
 {{- define "chart.prometheusRuleName" -}}
 {{- printf "%s-alerts" (include "chart.fullname" .) -}}
+{{- end -}}
+
+{{/* Controller permissions shared by ClusterRole and Role modes. */}}
+{{- define "chart.controllerRules" -}}
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch", "update"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
 {{- end -}}

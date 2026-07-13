@@ -20,8 +20,19 @@ helm upgrade --install kube-ephemeral-container-exporter \
 | `image.tag`              | Exporter image tag. Empty uses the chart app version. | `""`                                                    |
 | `image.pullPolicy`       | Image pull policy.                                    | `IfNotPresent`                                          |
 | `replicas`               | Deployment replica count.                             | `1`                                                     |
-| `watchNamespaces`        | Namespaces to watch. Empty means cluster-wide.        | `[]`                                                    |
 | `leaderElection.enabled` | Enable controller leader election.                    | `true`                                                  |
+
+## Watch scope
+
+| Key | Description | Default |
+| --- | --- | --- |
+| `watch.currentNamespace` | Watch only the namespace containing the exporter Pod. | `false` |
+| `watch.namespaces` | Namespaces to watch; one Role and RoleBinding is created in each. | `[]` |
+
+When either namespace-scoped option is configured, the chart omits the
+controller ClusterRole and ClusterRoleBinding and creates namespace-scoped
+controller RBAC. Metrics authentication cluster RBAC remains independently
+controlled by `metrics.rbac.create`.
 
 ## Deployment and pod values
 
@@ -62,8 +73,10 @@ helm upgrade --install kube-ephemeral-container-exporter \
 
 | Key                                       | Description                                         | Default         |
 | ----------------------------------------- | --------------------------------------------------- | --------------- |
-| `clusterRole.create`                      | Create the ClusterRole and ClusterRoleBinding.      | `true`          |
-| `clusterRole.name`                        | Existing ClusterRole name to bind to.               | `""`            |
+| `clusterRole.create`                      | Create controller cluster RBAC in cluster-wide mode. | `true`         |
+| `clusterRole.name`                        | Custom controller ClusterRole name.                 | `""`            |
+| `role.create`                             | Explicitly create namespace-scoped controller RBAC. | `false`         |
+| `role.name`                               | Custom controller Role name.                        | `""`            |
 | `serviceAccount.create`                   | Create the ServiceAccount.                          | `true`          |
 | `serviceAccount.annotations`              | ServiceAccount annotations.                         | `{}`            |
 | `ciliumNetworkPolicy.enabled`             | Render the CiliumNetworkPolicy resources.           | `false`         |

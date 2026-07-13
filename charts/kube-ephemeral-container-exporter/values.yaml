@@ -36,7 +36,11 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-watchNamespaces: []
+# Namespace scope for Pod watches. By default the exporter watches the whole
+# cluster. currentNamespace and namespaces are mutually exclusive.
+watch:
+  currentNamespace: false
+  namespaces: []
 
 probes:
   # override default health and readiness probe bind address
@@ -121,6 +125,13 @@ metrics:
 
 clusterRole:
   create: true
+  name: ""
+  extraRules: []
+
+# Explicitly create controller namespace RBAC. Namespace-scoped watch modes
+# enable this automatically for every watched namespace.
+role:
+  create: false
   name: ""
   extraRules: []
 

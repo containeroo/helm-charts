@@ -40,11 +40,16 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.env }}
+          {{- if or .Values.watch.currentNamespace .Values.env }}
           env:
-            {{- range . }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+            {{- if .Values.watch.currentNamespace }}
+            - name: EC_EXPORTER_WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            {{- end }}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
           ports:
@@ -75,10 +80,8 @@ spec:
             {{- if not .Values.leaderElection.enabled }}
             - --leader-elect=false
             {{- end }}
-            {{- if .Values.watchNamespaces }}
-            {{- range .Values.watchNamespaces }}
+            {{- range .Values.watch.namespaces }}
             - --watch-namespace={{ . }}
-            {{- end }}
             {{- end }}
             {{- if ne .Values.logging.format "json" }}
             - --log-encoder={{ .Values.logging.format }}
