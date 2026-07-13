@@ -75,7 +75,7 @@ Resolve the namespace to use for namespaced objects.
 Metrics auth cluster role name.
 */}}
 {{- define "chart.metricsAuthClusterRoleName" -}}
-{{- printf "%s-metrics-auth" (include "chart.fullname" .) -}}
+{{- default (printf "%s-metrics-auth" (include "chart.fullname" .)) .Values.metrics.rbac.name -}}
 {{- end -}}
 
 {{/*

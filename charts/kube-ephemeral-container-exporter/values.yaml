@@ -84,6 +84,11 @@ securityContext:
 
 metrics:
   enabled: true
+  # Create the ClusterRole and ClusterRoleBinding used by the secure metrics
+  # endpoint for TokenReview and SubjectAccessReview requests.
+  rbac:
+    create: false
+    name: ""
   # override default metrics listen address
   # address: ":8443"
   address: ""
