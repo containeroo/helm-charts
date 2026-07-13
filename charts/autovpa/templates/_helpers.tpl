@@ -67,7 +67,7 @@ Create the name of the cluster role to use.
 */}}
 {{- define "chart.clusterRoleName" -}}
 {{- if .Values.clusterRole.create -}}
-    {{ default (include "chart.fullname" .) .Values.clusterRole.name }}
+    {{ default (printf "%s-manager" (include "chart.fullname" .)) .Values.clusterRole.name }}
 {{- else -}}
     {{ default "default" .Values.clusterRole.name }}
 {{- end -}}
@@ -77,7 +77,7 @@ Create the name of the cluster role to use.
 Create the name of the namespaced role to use.
 */}}
 {{- define "chart.roleName" -}}
-{{- default (include "chart.fullname" .) .Values.role.name -}}
+{{- default (printf "%s-manager" (include "chart.fullname" .)) .Values.role.name -}}
 {{- end -}}
 
 {{/*

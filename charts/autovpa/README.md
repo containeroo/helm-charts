@@ -119,10 +119,10 @@ The metrics authentication RBAC remains independently controlled by
 | Key                          | Description                                          | Default Value |
 | ---------------------------- | ---------------------------------------------------- | ------------- |
 | `clusterRole.create`         | Create controller cluster RBAC in cluster-wide mode. | `true`        |
-| `clusterRole.name`           | Custom name for the ClusterRole.                     | `""`          |
+| `clusterRole.name`           | Custom name for the controller ClusterRole.          | `""`          |
 | `clusterRole.extraRules`     | Additional RBAC rules for the ClusterRole.           | `[]`          |
 | `role.create`                | Explicitly create namespace-scoped controller RBAC.  | `false`       |
-| `role.name`                  | Custom name for the Role.                            | `""`          |
+| `role.name`                  | Custom name for the controller Role.                 | `""`          |
 | `role.extraRules`            | Additional RBAC rules for the Role.                  | `[]`          |
 | `serviceAccount.create`      | Create a ServiceAccount.                             | `true`        |
 | `serviceAccount.annotations` | Annotations for the ServiceAccount.                  | `{}`          |
