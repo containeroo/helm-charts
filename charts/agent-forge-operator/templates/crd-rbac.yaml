@@ -1,0 +1,88 @@
+{{- if .Values.crdRoles.create -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.crdRoles.adminName }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools
+  - vsphereagents
+  verbs:
+  - '*'
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools/status
+  - vsphereagents/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.crdRoles.editorName }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools/status
+  verbs:
+  - get
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagents/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.crdRoles.viewerName }}
+  labels:
+    {{- include "agent-forge-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools
+  - vsphereagents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools/status
+  - vsphereagents/status
+  verbs:
+  - get
+{{- end }}

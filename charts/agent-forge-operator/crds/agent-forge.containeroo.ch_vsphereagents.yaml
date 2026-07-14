@@ -71,6 +71,9 @@ spec:
                 required:
                 - name
                 type: object
+                x-kubernetes-validations:
+                - message: poolRef is immutable
+                  rule: self == oldSelf
             required:
             - poolRef
             type: object
@@ -247,6 +250,11 @@ spec:
                   name:
                     description: Name is the vSphere VM name.
                     type: string
+                  ownerUID:
+                    description: |-
+                      OwnerUID is the Kubernetes VsphereAgent UID recorded in the vSphere VM
+                      annotation. It prevents name collisions from being adopted or deleted.
+                    type: string
                   phase:
                     description: |-
                       Phase is the current bridge view of the VM lifecycle, such as
@@ -255,6 +263,15 @@ spec:
                   reason:
                     description: Reason provides a short machine-readable explanation
                       for Phase.
+                    type: string
+                  source:
+                    description: |-
+                      Source identifies whether this VM is backed by a VsphereAgent or was only
+                      observed through an Assisted Installer Agent. Discovered-only VMs are not
+                      eligible for automatic external cleanup.
+                    enum:
+                    - VsphereAgent
+                    - DiscoveredAgent
                     type: string
                 required:
                 - name

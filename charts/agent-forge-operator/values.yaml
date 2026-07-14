@@ -39,6 +39,13 @@ clusterRole:
   # Additional rules to be included in the role.
   extraRules: []
 
+# Specifies whether to create the user-facing roles for managing the operator CRDs.
+crdRoles:
+  create: true
+  adminName: vsphereagentpool-admin-role
+  editorName: vsphereagentpool-editor-role
+  viewerName: vsphereagentpool-viewer-role
+
 # Specifies whether to create a namespaced role and role binding for leader election.
 leaderElectionRole:
   create: true

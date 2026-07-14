@@ -93,8 +93,8 @@ spec:
               cleanupPolicy:
                 default: Delete
                 description: |-
-                  CleanupPolicy controls whether stale vSphere VMs and unbound Assisted
-                  Installer Agents are deleted by the operator. Use Retain for conservative
+                  CleanupPolicy controls whether stale operator-managed vSphere VMs and their
+                  unbound Assisted Installer Agents are deleted. Use Retain for conservative
                   production rollouts where external inventory cleanup is handled manually.
                 enum:
                 - Delete
@@ -109,6 +109,9 @@ spec:
                 minLength: 1
                 pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                 type: string
+                x-kubernetes-validations:
+                - message: controlPlaneNamespace is immutable
+                  rule: self == oldSelf
               hostedClusterRef:
                 description: HostedClusterRef references the Hypershift HostedCluster
                   this pool serves.
@@ -122,6 +125,9 @@ spec:
                 required:
                 - name
                 type: object
+                x-kubernetes-validations:
+                - message: hostedClusterRef is immutable
+                  rule: self == oldSelf
               infraEnvRef:
                 description: |-
                   InfraEnvRef references the Assisted Installer InfraEnv that exposes the
@@ -136,6 +142,9 @@ spec:
                 required:
                 - name
                 type: object
+                x-kubernetes-validations:
+                - message: infraEnvRef is immutable
+                  rule: self == oldSelf
               iso:
                 description: ISO configures content-addressed caching of the InfraEnv
                   discovery ISO.
@@ -176,6 +185,9 @@ spec:
                 required:
                 - name
                 type: object
+                x-kubernetes-validations:
+                - message: nodePoolRef is immutable
+                  rule: self == oldSelf
               template:
                 description: Template configures the worker VM hardware profile.
                 properties:
@@ -195,8 +207,10 @@ spec:
                     type: integer
                   namePrefix:
                     description: |-
-                      NamePrefix prefixes operator-created VM names. When empty, the operator
-                      uses <hostedCluster>-<agent.role>.
+                      NamePrefix is retained for API compatibility but is ignored. VM names are
+                      pinned to AgentMachine names so each discovered Agent can satisfy only its
+                      intended AgentMachine.
+                      Deprecated: VM names are derived from AgentMachine names.
                     maxLength: 58
                     pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
                     type: string
@@ -234,12 +248,18 @@ spec:
                     required:
                     - name
                     type: object
+                    x-kubernetes-validations:
+                    - message: credentialsSecretRef is immutable
+                      rule: self == oldSelf
                   datacenter:
                     default: dc1
                     description: Datacenter is the target vSphere datacenter name.
                     maxLength: 256
                     minLength: 1
                     type: string
+                    x-kubernetes-validations:
+                    - message: datacenter is immutable
+                      rule: self == oldSelf
                   datastoreCluster:
                     description: |-
                       DatastoreCluster is the datastore cluster used for VM disks. It maps to
@@ -264,6 +284,9 @@ spec:
                       cluster name.
                     maxLength: 512
                     type: string
+                    x-kubernetes-validations:
+                    - message: folder is immutable
+                      rule: self == oldSelf
                   guestID:
                     default: rhel9_64Guest
                     description: GuestID is the vSphere guest OS identifier used for
@@ -278,6 +301,9 @@ spec:
                     maxLength: 256
                     minLength: 1
                     type: string
+                    x-kubernetes-validations:
+                    - message: isoDatastore is immutable
+                      rule: self == oldSelf
                   network:
                     description: Network is the vSphere network name attached to the
                       VM NIC.
@@ -472,8 +498,9 @@ spec:
                     format: date-time
                     type: string
                   url:
-                    description: URL is the InfraEnv status.isoDownloadURL used for
-                      the last check.
+                    description: |-
+                      URL is the redacted InfraEnv status.isoDownloadURL used for the last check.
+                      User information, query parameters, and fragments are never persisted.
                     type: string
                 type: object
               matchingAgents:
@@ -593,6 +620,11 @@ spec:
                     name:
                       description: Name is the vSphere VM name.
                       type: string
+                    ownerUID:
+                      description: |-
+                        OwnerUID is the Kubernetes VsphereAgent UID recorded in the vSphere VM
+                        annotation. It prevents name collisions from being adopted or deleted.
+                      type: string
                     phase:
                       description: |-
                         Phase is the current bridge view of the VM lifecycle, such as
@@ -601,6 +633,15 @@ spec:
                     reason:
                       description: Reason provides a short machine-readable explanation
                         for Phase.
+                      type: string
+                    source:
+                      description: |-
+                        Source identifies whether this VM is backed by a VsphereAgent or was only
+                        observed through an Assisted Installer Agent. Discovered-only VMs are not
+                        eligible for automatic external cleanup.
+                      enum:
+                      - VsphereAgent
+                      - DiscoveredAgent
                       type: string
                   required:
                   - name

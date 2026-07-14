@@ -24,14 +24,10 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools
-  - vsphereagents
   verbs:
-  - create
-  - delete
   - get
   - list
   - patch
-  - update
   - watch
 - apiGroups:
   - agent-forge.containeroo.ch
@@ -50,15 +46,33 @@ rules:
   - patch
   - update
 - apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagents
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
   - agent-install.openshift.io
   resources:
   - agents
-  - infraenvs
   verbs:
   - delete
   - get
   - list
   - patch
+  - watch
+- apiGroups:
+  - agent-install.openshift.io
+  resources:
+  - infraenvs
+  verbs:
+  - get
+  - list
   - watch
 - apiGroups:
   - capi-provider.agent-install.openshift.io

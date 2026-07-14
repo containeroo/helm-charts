@@ -30,6 +30,10 @@ The following table lists the configurable parameters of the agent-forge-operato
 | `clusterRole.create`                           | `true`                                              | If `true`, create cluster role and cluster role binding |
 | `clusterRole.name`                             | `agent-forge-operator`                              | The name of a cluster role to bind to                 |
 | `clusterRole.extraRules`                       | `[]`                                                | Additional rules to be included in the role           |
+| `crdRoles.create`                              | `true`                                              | Create user-facing roles for managing the operator CRDs |
+| `crdRoles.adminName`                           | `vsphereagentpool-admin-role`                       | Name of the full-access CRD role                       |
+| `crdRoles.editorName`                          | `vsphereagentpool-editor-role`                      | Name of the CRD editor role                            |
+| `crdRoles.viewerName`                          | `vsphereagentpool-viewer-role`                      | Name of the read-only CRD role                         |
 | `leaderElectionRole.create`                    | `true`                                              | If `true`, create leader election role and role binding |
 | `leaderElectionRole.name`                      | `agent-forge-operator-leader-election`              | The name of a leader election role to bind to         |
 | `leaderElectionRole.extraRules`                | `[]`                                                | Additional rules to be included in the role           |
