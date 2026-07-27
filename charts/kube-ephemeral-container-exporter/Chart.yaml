@@ -2,7 +2,7 @@ apiVersion: v2
 name: kube-ephemeral-container-exporter
 description: Exposes Prometheus metrics for Pods with attached ephemeral containers.
 type: application
-version: 0.2.2
+version: 0.2.3
 appVersion: "v0.0.14"
 keywords:
   - ephemeral-containers
