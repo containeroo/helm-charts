@@ -55,6 +55,7 @@ resources:
     memory: 200Mi
 
 replicas: 1
+terminationGracePeriodSeconds: 10
 
 sidecars: []
 # Add additional sidecar containers to the operator pod
@@ -75,13 +76,23 @@ tolerations: []
 
 affinity: {}
 
+probes:
+  # Override the default health and readiness probe bind address.
+  # address: ":8081"
+  address: ""
+  # Must match the port in address when address overrides the default.
+  port: 8081
+
+server:
+  enableHTTP2: false
+
 startupProbe:
   enabled: true
   # customize the startup probe
   spec:
     httpGet:
       path: /healthz
-      port: 8081
+      port: probes
     failureThreshold: 30
     periodSeconds: 2
 
@@ -91,7 +102,7 @@ livenessProbe:
   spec:
     httpGet:
       path: /healthz
-      port: 8081
+      port: probes
     periodSeconds: 20
 
 readinessProbe:
@@ -100,7 +111,7 @@ readinessProbe:
   spec:
     httpGet:
       path: /readyz
-      port: 8081
+      port: probes
     periodSeconds: 10
 
 podSecurityContext: {}
@@ -122,19 +133,24 @@ metrics:
   rbac:
     create: true
     name: ""
-  # override default metrics listen address
+  # Override the default metrics listen address.
   # address: ":8443"
-  # Enable the metrics-server serviceMonitor
+  address: ""
+  # Must match the port in address when address overrides the default.
+  port: 8443
+  # Serve the metrics endpoint over HTTPS. When false, the ServiceMonitor uses HTTP.
+  secure: true
   service:
     enabled: true
     type: ClusterIP
     ports:
-      - name: https
+      - name: metrics
         port: 8443
         protocol: TCP
-        targetPort: 8443
+        targetPort: metrics
   serviceMonitor:
     enabled: true
+    jobLabel: app.kubernetes.io/name
   # Specifies whether to create a PrometheusRule for the operator
   prometheusRule:
     enabled: true
@@ -192,6 +208,8 @@ leaderElection:
 # Custom logging configuration
 logging:
   format: json # available options: json, console
+  stacktraceLevel: panic # available options: info, error, panic
+  devel: false
 
 # Add custom environment variables to the operator pod
 env:
@@ -200,7 +218,3 @@ env:
 
 # extra arguments for the application (appended to the defaults)
 extraArgs: []
-# Example:
-# extraArgs:
-#   - --metrics-secure=false
-#   - --metrics-bind-address=:8443

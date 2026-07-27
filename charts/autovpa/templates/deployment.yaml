@@ -28,16 +28,23 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: autovpa
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.watch.currentNamespace .Values.env }}
           env:
             {{- if .Values.watch.currentNamespace }}
             - name: AUTO_VPA_WATCH_NAMESPACE
@@ -48,18 +55,31 @@ spec:
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- end }}
           ports:
             {{- if .Values.metrics.enabled }}
             - name: metrics
-              containerPort: 8443
+              containerPort: {{ .Values.metrics.port }}
               protocol: TCP
             {{- end }}
             - name: probes
-              containerPort: 8081
+              containerPort: {{ .Values.probes.port }}
               protocol: TCP
           args:
             {{- if not .Values.metrics.enabled }}
             - --metrics-enabled=false
+            {{- end }}
+            {{- if .Values.metrics.address }}
+            - --metrics-bind-address={{ .Values.metrics.address }}
+            {{- end }}
+            {{- if not .Values.metrics.secure }}
+            - --metrics-secure=false
+            {{- end }}
+            {{- if .Values.probes.address }}
+            - --health-probe-bind-address={{ .Values.probes.address }}
+            {{- end }}
+            {{- if .Values.server.enableHTTP2 }}
+            - --enable-http2
             {{- end }}
             - --leader-elect={{ .Values.leaderElection.enabled }}
             {{- range .Values.watch.namespaces }}
@@ -69,10 +89,15 @@ spec:
             - --profile-annotation={{ .Values.profile.annotation }}
             - --managed-label={{ .Values.profile.managedLabel }}
             - --vpa-name-template={{ .Values.profile.nameTemplate }}
-            {{- if eq .Values.logging.format "console" }}
+            {{- if ne .Values.logging.format "json" }}
+            - --log-encoder={{ .Values.logging.format }}
+            {{- end }}
+            {{- if .Values.logging.devel }}
             - --log-devel
             {{- end }}
-            - --log-encoder={{ .Values.logging.format }}
+            {{- if ne .Values.logging.stacktraceLevel "panic" }}
+            - --log-stacktrace-level={{ .Values.logging.stacktraceLevel }}
+            {{- end }}
             {{- range .Values.extraArgs }}
             - {{ . }}
             {{- end }}
@@ -98,14 +123,20 @@ spec:
             {{- toYaml .Values.readinessProbe.spec | nindent 12 }}
           {{- end }}
         {{- if .Values.sidecars }}
-          {{- toYaml .Values.sidecars | nindent 8 }}
+        {{- toYaml .Values.sidecars | nindent 8 }}
         {{- end }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-        {{- toYaml .Values.nodeSelector | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
       tolerations:
-        {{- toYaml .Values.tolerations | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
       affinity:
-        {{- toYaml .Values.affinity | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if or .Values.profile.configMap.create .Values.profile.configMap.name }}
       volumes:
         - name: profiles
@@ -115,4 +146,4 @@ spec:
               - key: {{ .Values.profile.configMap.key }}
                 path: {{ .Values.profile.configMap.key }}
       {{- end }}
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}

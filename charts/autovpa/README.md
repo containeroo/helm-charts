@@ -32,6 +32,7 @@ helm upgrade --install autovpa containeroo/autovpa
 | `nodeSelector`   | Node selector for pod placement.       | `{}`          |
 | `tolerations`    | Tolerations for pod scheduling.        | `[]`          |
 | `affinity`       | Affinity rules for pod placement.      | `{}`          |
+| `terminationGracePeriodSeconds` | Pod termination grace period. | `10` |
 
 ---
 
@@ -67,14 +68,17 @@ The metrics authentication RBAC remains independently controlled by
 
 ## Probes
 
-| Key                      | Description                            | Default Value       |
-| ------------------------ | -------------------------------------- | ------------------- |
-| `startupProbe.enabled`   | Enable startup probe.                  | `true`              |
-| `startupProbe.spec`      | Configuration for the startup probe.   | See default values. |
-| `livenessProbe.enabled`  | Enable liveness probe.                 | `true`              |
-| `livenessProbe.spec`     | Configuration for the liveness probe.  | See default values. |
-| `readinessProbe.enabled` | Enable readiness probe.                | `true`              |
-| `readinessProbe.spec`    | Configuration for the readiness probe. | See default values. |
+| Key                      | Description                                      | Default Value       |
+| ------------------------ | ------------------------------------------------ | ------------------- |
+| `probes.address`         | Override the health and readiness bind address.  | `""`                |
+| `probes.port`            | Container port used by the named probe port.     | `8081`              |
+| `server.enableHTTP2`     | Enable HTTP/2 for metrics and probe servers.      | `false`             |
+| `startupProbe.enabled`   | Enable startup probe.                            | `true`              |
+| `startupProbe.spec`      | Configuration for the startup probe.             | See default values. |
+| `livenessProbe.enabled`  | Enable liveness probe.                           | `true`              |
+| `livenessProbe.spec`     | Configuration for the liveness probe.            | See default values. |
+| `readinessProbe.enabled` | Enable readiness probe.                          | `true`              |
+| `readinessProbe.spec`    | Configuration for the readiness probe.           | See default values. |
 
 ---
 
@@ -100,17 +104,30 @@ The metrics authentication RBAC remains independently controlled by
 
 ## Metrics Configuration
 
-| Key                                       | Description                                 | Default Value       |
-| ----------------------------------------- | ------------------------------------------- | ------------------- |
-| `metrics.enabled`                         | Enable metrics collection.                  | `true`              |
-| `metrics.rbac.create`                     | Create metrics authentication cluster RBAC. | `true`              |
-| `metrics.rbac.name`                       | Custom metrics authentication RBAC name.    | `""`                |
-| `metrics.service.type`                    | Metrics service type.                       | `ClusterIP`         |
-| `metrics.service.ports`                   | Ports for the metrics service.              | See default values. |
-| `metrics.prometheusRule.enabled`          | Enable Prometheus rules for alerts.         | `true`              |
-| `metrics.prometheusRule.namespace`        | Namespace for Prometheus rules.             | `monitoring`        |
-| `metrics.prometheusRule.severity`         | Severity of alerts.                         | `critical`          |
-| `metrics.prometheusRule.additionalLabels` | Additional labels for Prometheus rules.     | `{}`                |
+| Key                                       | Description                                                  | Default Value                  |
+| ----------------------------------------- | ------------------------------------------------------------ | ------------------------------ |
+| `metrics.enabled`                         | Enable the metrics endpoint.                                 | `true`                         |
+| `metrics.address`                         | Override the metrics bind address.                           | `""`                           |
+| `metrics.port`                            | Container port exposed under the `metrics` name.             | `8443`                         |
+| `metrics.secure`                          | Serve metrics over HTTPS instead of HTTP.                    | `true`                         |
+| `metrics.rbac.create`                     | Create HTTPS metrics authentication cluster RBAC.            | `true`                         |
+| `metrics.rbac.name`                       | Custom metrics authentication RBAC name.                     | `""`                           |
+| `metrics.service.enabled`                 | Create the metrics Service.                                  | `true`                         |
+| `metrics.service.type`                    | Metrics Service type.                                        | `ClusterIP`                    |
+| `metrics.service.ports`                   | Ports for the metrics Service.                               | See default values.            |
+| `metrics.serviceMonitor.enabled`          | Create the ServiceMonitor.                                   | `true`                         |
+| `metrics.serviceMonitor.jobLabel`         | Service label used as the Prometheus `job`.                  | `app.kubernetes.io/name`       |
+| `metrics.prometheusRule.enabled`          | Enable Prometheus rules for alerts.                          | `true`                         |
+| `metrics.prometheusRule.namespace`        | Namespace for Prometheus rules.                              | `monitoring`                   |
+| `metrics.prometheusRule.severity`         | Severity of alerts.                                          | `critical`                     |
+| `metrics.prometheusRule.additionalLabels` | Additional labels for Prometheus rules.                      | `{}`                           |
+
+The ServiceMonitor scheme follows `metrics.secure`: `https` includes the TLS
+configuration used by the controller-runtime self-signed endpoint, while
+`http` omits it. When changing the port in `metrics.address`, set
+`metrics.port` to the same port. The default Service targets this named port.
+Likewise, keep `probes.port` aligned with a custom `probes.address`.
+Metrics authentication RBAC is rendered only when metrics and HTTPS are enabled.
 
 ---
 
@@ -140,9 +157,11 @@ The metrics authentication RBAC remains independently controlled by
 
 ## Logging Configuration
 
-| Key              | Description     | Default Value |
-| ---------------- | --------------- | ------------- |
-| `logging.format` | Logging format. | `json`        |
+| Key                      | Description                         | Default Value |
+| ------------------------ | ----------------------------------- | ------------- |
+| `logging.format`         | Log encoder (`json` or `console`).  | `json`        |
+| `logging.devel`          | Enable development logging.         | `false`       |
+| `logging.stacktraceLevel` | Stacktrace level.                  | `panic`       |
 
 ---
 

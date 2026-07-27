@@ -8,13 +8,16 @@ metadata:
   labels:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
+  jobLabel: {{ .Values.metrics.serviceMonitor.jobLabel }}
   endpoints:
-  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-    path: /metrics
-    port: metrics
-    scheme: https
-    tlsConfig:
-      insecureSkipVerify: true
+    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      path: /metrics
+      port: metrics
+      scheme: {{ ternary "https" "http" .Values.metrics.secure }}
+      {{- if .Values.metrics.secure }}
+      tlsConfig:
+        insecureSkipVerify: true
+      {{- end }}
   selector:
     matchLabels:
       {{- include "chart.selectorLabels" . | nindent 6 }}
