@@ -56,7 +56,7 @@ controlled by `metrics.rbac.create`.
 | Key                                           | Description                                                         | Default                  |
 | --------------------------------------------- | ------------------------------------------------------------------- | ------------------------ |
 | `metrics.enabled`                             | Enable the metrics endpoint.                                        | `true`                   |
-| `metrics.rbac.create`                         | Create metrics authentication cluster RBAC.                         | `false`                  |
+| `metrics.rbac.create`                         | Create HTTPS metrics authentication cluster RBAC.                   | `false`                  |
 | `metrics.rbac.name`                           | Custom metrics authentication RBAC name.                            | `""`                     |
 | `metrics.address`                             | Override the metrics bind address.                                  | `""`                     |
 | `metrics.secure`                              | Serve metrics over HTTPS.                                           | `false`                  |
@@ -68,6 +68,10 @@ controlled by `metrics.rbac.create`.
 | `metrics.prometheusRule.exporterDown.enabled` | Alert when no healthy exporter target is scraped.                   | `true`                   |
 | `metrics.prometheusRule.longRunning.enabled`  | Alert when an ephemeral container keeps running too long.           | `true`                   |
 | `metrics.prometheusRule.longRunning.for`      | Duration before firing the long-running alert.                      | `1h`                     |
+
+The ServiceMonitor includes a bearer token and TLS configuration only when
+`metrics.secure` is enabled. Metrics authentication RBAC is likewise rendered
+only when metrics, HTTPS, and `metrics.rbac.create` are all enabled.
 
 ## RBAC and networking values
 

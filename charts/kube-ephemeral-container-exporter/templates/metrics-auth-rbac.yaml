@@ -1,4 +1,4 @@
-{{- if and .Values.metrics.enabled .Values.metrics.rbac.create }}
+{{- if and .Values.metrics.enabled .Values.metrics.secure .Values.metrics.rbac.create }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

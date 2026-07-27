@@ -10,11 +10,11 @@ metadata:
 spec:
   jobLabel: {{ .Values.metrics.serviceMonitor.jobLabel }}
   endpoints:
-    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-      path: /metrics
+    - path: /metrics
       port: metrics
       scheme: {{ ternary "https" "http" .Values.metrics.secure }}
       {{- if .Values.metrics.secure }}
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
       tlsConfig:
         insecureSkipVerify: true
       {{- end }}
