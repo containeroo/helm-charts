@@ -331,6 +331,37 @@ entries:
       artifacthub.io/operator: "true"
     apiVersion: v2
     appVersion: v0.0.34
+    created: "2026-07-27T10:38:41.28004566Z"
+    description: AutoVPA ensures workloads annotated with a profile get a matching
+      VerticalPodAutoscaler.
+    digest: 79859bd28470cba10bca760cc22f8229bedfbcf27350072e8575e2aba33861e9
+    home: https://github.com/containeroo/autovpa
+    keywords:
+    - autoscaling
+    - operator
+    - vertical-pod-autoscaler
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: autovpa
+    sources:
+    - https://github.com/containeroo/autovpa
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/autovpa-0.4.0/autovpa-0.4.0.tgz
+    version: 0.4.0
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/autovpa
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: v0.0.34
     created: "2026-07-13T10:51:24.073382061Z"
     description: AutoVPA ensures workloads annotated with a profile get a matching
       VerticalPodAutoscaler.
@@ -3496,4 +3527,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-07-14T09:09:59.41973928Z"
+generated: "2026-07-27T10:38:41.280225925Z"
