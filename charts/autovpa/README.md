@@ -123,8 +123,8 @@ The metrics authentication RBAC remains independently controlled by
 | `metrics.prometheusRule.additionalLabels` | Additional labels for Prometheus rules.                      | `{}`                           |
 
 The ServiceMonitor scheme follows `metrics.secure`: `https` includes the TLS
-configuration used by the controller-runtime self-signed endpoint, while
-`http` omits it. When changing the port in `metrics.address`, set
+configuration and bearer token used by the controller-runtime authenticated
+endpoint, while `http` omits both. When changing the port in `metrics.address`, set
 `metrics.port` to the same port. The default Service targets this named port.
 Likewise, keep `probes.port` aligned with a custom `probes.address`.
 Metrics authentication RBAC is rendered only when metrics and HTTPS are enabled.
