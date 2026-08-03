@@ -16,17 +16,15 @@ spec:
     rules:
       - alert: AutoVPAMetricsMissing
         expr: |
-          absent(autovpavpa_created_total)
-          or absent(autovpavpa_updated_total)
-          or absent(autovpavpa_skipped_total)
+          absent(autovpa_build_info)
         for: 5m
         labels:
           severity: {{ .Values.metrics.prometheusRule.severity }}
         annotations:
           summary: AutoVPA metrics missing
-          description: AutoVPA metrics are not being scraped for {{ "{{ $labels.job }}" }}.
+          description: AutoVPA metrics are not being scraped from any target.
       - alert: AutoVPASkipsDetected
-        expr: increase(autovpavpa_skipped_total[5m]) > 0
+        expr: increase(autovpa_vpa_skipped_total[5m]) > 0
         for: 5m
         labels:
           severity: {{ .Values.metrics.prometheusRule.severity }}
