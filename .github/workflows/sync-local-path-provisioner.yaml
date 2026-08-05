@@ -42,4 +42,3 @@ jobs:
           body: "Automated update from rancher/local-path-provisioner."
           branch: "automation/local-path-provisioner-sync"
           delete-branch: true
-          assignees: "rxbn"
