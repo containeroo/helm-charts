@@ -3154,6 +3154,22 @@ entries:
     version: 0.1.0
   local-path-provisioner:
   - apiVersion: v1
+    appVersion: v0.0.37
+    created: "2026-08-05T07:14:36.029439465Z"
+    description: Use HostPath for persistent local storage with Kubernetes
+    digest: 1df764f8d8ce5368a869034b055c8caf234c756a0cac5f71a1eeee001f3a930a
+    home: https://github.com/rancher/local-path-provisioner
+    keywords:
+    - storage
+    - hostpath
+    kubeVersion: '>=1.12.0-r0'
+    name: local-path-provisioner
+    sources:
+    - https://github.com/rancher/local-path-provisioner.git
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/local-path-provisioner-0.0.38/local-path-provisioner-0.0.38.tgz
+    version: 0.0.38
+  - apiVersion: v1
     appVersion: v0.0.36
     created: "2026-05-09T09:12:52.1836393Z"
     description: Use HostPath for persistent local storage with Kubernetes
@@ -3681,4 +3697,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-08-03T07:42:30.753055275Z"
+generated: "2026-08-05T07:14:36.030028413Z"
