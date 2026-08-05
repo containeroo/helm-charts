@@ -26,7 +26,7 @@ fi
 
 latest_tag="$(
   git ls-remote --tags --refs "${repo_url}" "v*" \
-    | awk -F/ '{print $3}' \
+    | awk -F/ '$3 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/ {print $3}' \
     | sort -V \
     | tail -n 1
 )"
