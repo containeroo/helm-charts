@@ -6,7 +6,7 @@ namespaceOverride: ""
 
 image:
   repository: docker.io/rancher/local-path-provisioner
-  tag: v0.0.36
+  tag: v0.0.37
   pullPolicy: IfNotPresent
 
 helperImage:
@@ -57,6 +57,20 @@ storageClass:
 
   ## Set a path pattern, if unset the default will be used
   # pathPattern: "{{ .PVC.Namespace }}-{{ .PVC.Name }}"
+
+  ## Set a node label key to use for the PV node affinity instead of the default
+  ## `kubernetes.io/hostname`. Useful when node hostnames are not stable. If unset
+  ## the default `kubernetes.io/hostname` behavior is preserved.
+  # nodeAffinityKey: my.domain/stable-node-id
+
+  ## Set a user pattern
+  userPattern: ''
+
+  ## Set a group pattern
+  groupPattern: ''
+
+  ## Set a permission pattern (string). Quote numeric modes to preserve leading zeros (e.g. '0700').
+  permPattern: ''
 
 # nodePathMap is the place user can customize where to store the data on each node.
 # 1. If one node is not listed on the nodePathMap, and Kubernetes wants to create volume on it, the paths specified in
@@ -198,3 +212,30 @@ debug: false
 
 # Extra arguments to pass to the CLI
 extraArgs: []
+
+# Health check configuration
+# To disable health checks, set health.enabled to false
+health:
+  enabled: true
+  port: 8080
+  # Full probe definitions can be overridden here
+  # The following defaults will be used if not overridden:
+  startupProbe:
+    httpGet:
+      path: /health
+      port: health
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 12
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: health
+    initialDelaySeconds: 10
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: health
+    initialDelaySeconds: 5
+    periodSeconds: 5
