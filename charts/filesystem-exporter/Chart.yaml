@@ -2,8 +2,8 @@ apiVersion: v2
 name: filesystem-exporter
 description: Helm chart for filesystem-exporter
 type: application
-version: 1.4.1
-appVersion: "v1.4.1"
+version: 1.5.2
+appVersion: "v1.5.2"
 keywords:
   - prometheus
   - exporter
