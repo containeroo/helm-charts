@@ -9,6 +9,38 @@ entries:
           url: https://github.com/containeroo/agent-forge-operator
       artifacthub.io/operator: "true"
     apiVersion: v2
+    appVersion: v1.1.1
+    created: "2026-09-01T07:31:00.477079599Z"
+    description: Helm chart for Agent Forge Operator
+    digest: 0e55156c887798c9dee3f9a6ae764b9552edf6b78ea17e365e314fa0162fd183
+    home: https://github.com/containeroo/agent-forge-operator
+    keywords:
+    - operator
+    - agent-forge
+    - hypershift
+    - openshift
+    - vsphere
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: agent-forge-operator
+    sources:
+    - https://github.com/containeroo/agent-forge-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/agent-forge-operator-1.1.1/agent-forge-operator-1.1.1.tgz
+    version: 1.1.1
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/agent-forge-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
     appVersion: v1.1.0
     created: "2026-07-14T09:09:59.419223905Z"
     description: Helm chart for Agent Forge Operator
@@ -578,6 +610,33 @@ entries:
         - name: Upstream Project
           url: https://github.com/containeroo/cert-manager-webhook-bluecat
     apiVersion: v2
+    appVersion: v1.0.2
+    created: "2026-09-01T07:31:00.606454882Z"
+    description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
+    digest: 69c0c6f9e0eb4d857e45082d20c0cca327367b05d90c75bdec1d9d97656fdbfd
+    home: https://github.com/containeroo/cert-manager-webhook-bluecat
+    keywords:
+    - cert-manager
+    - webhook
+    - bluecat
+    - dns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cert-manager-webhook-bluecat
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cert-manager-webhook-bluecat-1.0.2/cert-manager-webhook-bluecat-1.0.2.tgz
+    version: 1.0.2
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cert-manager-webhook-bluecat
+    apiVersion: v2
     appVersion: v1.0.1
     created: "2026-02-16T11:40:00.650155394Z"
     description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
@@ -626,6 +685,37 @@ entries:
     - https://github.com/containeroo/helm-charts/releases/download/cert-manager-webhook-bluecat-1.0.0/cert-manager-webhook-bluecat-1.0.0.tgz
     version: 1.0.0
   cloudflare-operator:
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cloudflare-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: v1.10.3
+    created: "2026-09-01T07:31:00.759761235Z"
+    description: Helm chart for Cloudflare Operator
+    digest: b0024ed75d44bc5a639d9cf87ff9bc4e7efce344db127c7ad0a3d22a97052723
+    home: https://containeroo.ch/docs/cloudflare-operator
+    keywords:
+    - cloudflare
+    - operator
+    - dns
+    - dyndns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cloudflare-operator
+    sources:
+    - https://github.com/containeroo/cloudflare-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-1.10.4/cloudflare-operator-1.10.4.tgz
+    version: 1.10.4
   - annotations:
       artifacthub.io/links: |
         - name: Chart Source
@@ -3008,6 +3098,36 @@ entries:
         - name: Upstream Project
           url: https://github.com/containeroo/filesystem-exporter
     apiVersion: v2
+    appVersion: v1.5.2
+    created: "2026-09-01T07:31:00.895261135Z"
+    description: Helm chart for filesystem-exporter
+    digest: 8c6cf21e04095bde2caa3273d18fa8029a0348e673bdf3e19b704feb4887ea00
+    home: https://github.com/containeroo/filesystem-exporter
+    keywords:
+    - prometheus
+    - exporter
+    - filesystem
+    - storage
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: filesystem-exporter
+    sources:
+    - https://github.com/containeroo/filesystem-exporter
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/filesystem-exporter-1.5.2/filesystem-exporter-1.5.2.tgz
+    version: 1.5.2
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/filesystem-exporter
+    apiVersion: v2
     appVersion: v1.4.1
     created: "2026-05-27T10:47:21.0203312Z"
     description: Helm chart for filesystem-exporter
@@ -3697,4 +3817,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-08-05T07:14:36.030028413Z"
+generated: "2026-09-01T07:31:00.895603725Z"
