@@ -757,6 +757,37 @@ entries:
           url: https://github.com/containeroo/cloudflare-operator
       artifacthub.io/operator: "true"
     apiVersion: v2
+    appVersion: v1.10.5
+    created: "2026-09-05T06:27:32.777289855Z"
+    description: Helm chart for Cloudflare Operator
+    digest: 49089f0784ea64fc5f578dd6673649547303c4791549644b9a01b4780222f311
+    home: https://containeroo.ch/docs/cloudflare-operator
+    keywords:
+    - cloudflare
+    - operator
+    - dns
+    - dyndns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cloudflare-operator
+    sources:
+    - https://github.com/containeroo/cloudflare-operator
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cloudflare-operator-1.10.6/cloudflare-operator-1.10.6.tgz
+    version: 1.10.6
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cloudflare-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
     appVersion: v1.10.4
     created: "2026-09-04T09:17:04.935478486Z"
     description: Helm chart for Cloudflare Operator
@@ -3912,4 +3943,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-09-04T09:17:04.935926727Z"
+generated: "2026-09-05T06:27:32.777579674Z"
