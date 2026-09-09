@@ -1,2 +1,6 @@
 Check out our documentation for more information:
-https://containeroo.github.io/cloudflare-operator/
+https://containeroo.ch/docs/cloudflare-operator/
+
+CRDs are managed separately from this chart. Before installing or upgrading, apply
+those matching the operator image ({{ .Values.image.tag | default .Chart.AppVersion }}):
+https://github.com/containeroo/cloudflare-operator/releases/download/{{ .Values.image.tag | default .Chart.AppVersion }}/crds.yaml

@@ -49,6 +49,33 @@ The following tables lists the configurable parameters of cloudflare-operator he
 
 ## Upgrade Notes
 
+### Chart 1.10.7 / operator v1.10.6
+
+This chart uses operator `v1.10.6`. CRDs are managed separately from the chart;
+apply the matching CRDs before upgrading the operator:
+
+```shell
+kubectl apply --server-side -f https://github.com/containeroo/cloudflare-operator/releases/download/v1.10.6/crds.yaml
+```
+
+Intervals must be valid, positive Go durations, such as `30s` or `5m`. Correct any
+invalid or non-positive intervals in existing resources before updating the CRDs.
+
+After the upgrade, allow existing DNSRecords to reconcile successfully and populate
+`status.zoneID` and `status.accountName` before changing their zone or account.
+Keep the original Account and token Secret available until remote cleanup completes.
+Records whose original Zone was already removed need that Zone restored, or their
+verified remote identity supplied in status, before deletion.
+
+Identical Ingress and Gateway API host requests in the same namespace now share a
+DNSRecord. Shared changes require all owners to agree. New generated resource names
+include a hostname hash; existing generated resources keep their names. Separate
+DNSRecord resources cannot adopt an already-owned remote record, and adoption
+requires matching content or structured data.
+
+Status metrics distinguish Ready (`0`), Failed (`1`), and Unknown (`2`). The chart's
+failure alerts match only Failed; Unknown no longer appears as a critical failure.
+
 ## From v0.x.x to v1.0.0
 
 The apiVersion of the cloudflare-operator CRDs changed from `cf.containeroo.ch/v1beta1` to `cloudflare-operator.io/v1`.
