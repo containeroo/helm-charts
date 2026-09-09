@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.21.0
+    controller-gen.kubebuilder.io/version: v0.22.0
   name: vsphereagentpools.agent-forge.containeroo.ch
 spec:
   group: agent-forge.containeroo.ch
@@ -501,6 +501,10 @@ spec:
                     description: |-
                       URL is the redacted InfraEnv status.isoDownloadURL used for the last check.
                       User information, query parameters, and fragments are never persisted.
+                    type: string
+                  urlHash:
+                    description: URLHash identifies the complete download URL without
+                      exposing credentials.
                     type: string
                 type: object
               matchingAgents:
