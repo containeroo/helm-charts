@@ -151,8 +151,8 @@ spec:
                 properties:
                   checkInterval:
                     description: |-
-                      CheckInterval controls how often the operator downloads and hashes the
-                      InfraEnv ISO to detect content changes when the URL remains stable.
+                      CheckInterval controls how often the operator revalidates the InfraEnv ISO
+                      with the image service and verifies the cached file.
                     type: string
                   ejectAfterInstall:
                     default: false
@@ -455,8 +455,8 @@ spec:
                 description: ISO records the active cached InfraEnv discovery ISO.
                 properties:
                   checkedAt:
-                    description: CheckedAt is when the operator last downloaded and
-                      hashed the ISO.
+                    description: CheckedAt is when the operator last revalidated the
+                      source and cached ISO.
                     format: date-time
                     type: string
                   forceRefreshToken:
@@ -490,6 +490,11 @@ spec:
                       - sha256
                       type: object
                     type: array
+                  lastModified:
+                    description: |-
+                      LastModified is the image service HTTP modification date used for conditional
+                      downloads. SHA256 still identifies and verifies the cached ISO bytes.
+                    type: string
                   path:
                     description: Path is the datastore path inserted into newly created
                       VMs.
