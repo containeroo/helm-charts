@@ -154,6 +154,14 @@ spec:
                       CheckInterval controls how often the operator downloads and hashes the
                       InfraEnv ISO to detect content changes when the URL remains stable.
                     type: string
+                  ejectAfterInstall:
+                    default: false
+                    description: |-
+                      EjectAfterInstall opts this pool into disconnecting and ejecting cached
+                      discovery media after the matching Agent reports Installed=True. Includes
+                      existing installed workers and overriding the guest CD-ROM lock. Disabling
+                      stops new ejections; a persisted in-flight ejection is still completed.
+                    type: boolean
                   pathPrefix:
                     description: |-
                       PathPrefix is the datastore directory used for content-addressed ISO

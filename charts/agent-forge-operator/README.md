@@ -74,3 +74,18 @@ The following table lists the configurable parameters of the agent-forge-operato
 ## CRD Upgrades
 
 Helm installs CRDs from the chart `crds/` directory on first install, but does not upgrade or delete CRDs during normal chart upgrades. When using the Commodore component, CRDs are rendered into the catalog and managed by Argo CD together with the operator resources.
+
+## Upgrading to 1.2.0
+
+Apply the updated CRDs before upgrading the controller; Helm does not upgrade
+resources in `crds/` during a normal Helm upgrade:
+
+```shell
+kubectl apply -f https://github.com/containeroo/agent-forge-operator/releases/download/v1.2.0/crds.yaml
+```
+
+Automatic discovery ISO ejection is disabled by default. Enable it on an individual
+`VsphereAgentPool` with `spec.iso.ejectAfterInstall: true` after canary validation.
+This is a pool setting, not a Helm value. Persisted in-progress ejections complete
+across restarts and after opt-out. This release adds the required `status.isoEjection`
+recovery fields to the `VsphereAgent` CRD.

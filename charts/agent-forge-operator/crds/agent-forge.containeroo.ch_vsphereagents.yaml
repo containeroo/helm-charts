@@ -140,6 +140,44 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              isoEjection:
+                description: |-
+                  ISOEjection records a single authorized media operation before vSphere is
+                  changed. It survives restarts and is completed even if opt-in is disabled.
+                properties:
+                  biosUUID:
+                    type: string
+                  datacenter:
+                    type: string
+                  deviceKey:
+                    type: integer
+                  disconnectStarted:
+                    description: |-
+                      DisconnectStarted is persisted immediately before issuing the disconnect.
+                      A pre-existing question is never answered for an operation not yet started.
+                    type: boolean
+                  isoPath:
+                    type: string
+                  ownerUID:
+                    type: string
+                  questionID:
+                    description: |-
+                      QuestionID is persisted before answering a CD-lock question. A different
+                      question on retry is never automatically answered.
+                    type: string
+                  startedAt:
+                    format: date-time
+                    type: string
+                  vmName:
+                    type: string
+                required:
+                - biosUUID
+                - datacenter
+                - deviceKey
+                - isoPath
+                - startedAt
+                - vmName
+                type: object
               observedGeneration:
                 description: |-
                   ObservedGeneration is the most recent metadata.generation reconciled by
