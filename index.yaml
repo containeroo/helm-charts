@@ -3446,6 +3446,36 @@ entries:
         - name: Upstream Project
           url: https://github.com/containeroo/filesystem-exporter
     apiVersion: v2
+    appVersion: v1.5.3
+    created: "2026-10-23T20:08:44.650939991Z"
+    description: Helm chart for filesystem-exporter
+    digest: 5c77716aa1e89984612112a68aaa29a8612abf80ecad442045f60b6269861430
+    home: https://github.com/containeroo/filesystem-exporter
+    keywords:
+    - prometheus
+    - exporter
+    - filesystem
+    - storage
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: filesystem-exporter
+    sources:
+    - https://github.com/containeroo/filesystem-exporter
+    - https://github.com/containeroo/helm-charts
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/filesystem-exporter-1.5.3/filesystem-exporter-1.5.3.tgz
+    version: 1.5.3
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/filesystem-exporter
+    apiVersion: v2
     appVersion: v1.5.2
     created: "2026-09-01T07:31:00.895261135Z"
     description: Helm chart for filesystem-exporter
@@ -4165,4 +4195,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-10-21T10:02:26.00231398Z"
+generated: "2026-10-23T20:08:44.651372209Z"
