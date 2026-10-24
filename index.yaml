@@ -834,6 +834,33 @@ entries:
         - name: Upstream Project
           url: https://github.com/containeroo/cert-manager-webhook-bluecat
     apiVersion: v2
+    appVersion: v1.0.3
+    created: "2026-10-24T13:01:30.268085849Z"
+    description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
+    digest: 4d14a46103059b2933987a242ba0181bfde42aa26a62e9ab5c7fe43797c33a97
+    home: https://github.com/containeroo/cert-manager-webhook-bluecat
+    keywords:
+    - cert-manager
+    - webhook
+    - bluecat
+    - dns
+    maintainers:
+    - email: rxbn@containeroo.ch
+      name: rxbn
+    - email: gi8@containeroo.ch
+      name: gi8
+    name: cert-manager-webhook-bluecat
+    type: application
+    urls:
+    - https://github.com/containeroo/helm-charts/releases/download/cert-manager-webhook-bluecat-1.0.3/cert-manager-webhook-bluecat-1.0.3.tgz
+    version: 1.0.3
+  - annotations:
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/containeroo/helm-charts
+        - name: Upstream Project
+          url: https://github.com/containeroo/cert-manager-webhook-bluecat
+    apiVersion: v2
     appVersion: v1.0.2
     created: "2026-09-01T07:31:00.606454882Z"
     description: cert-manager DNS01 webhook for BlueCat Address Manager REST v2
@@ -4195,4 +4222,4 @@ entries:
     urls:
     - https://github.com/containeroo/helm-charts/releases/download/terrascaler-0.0.1/terrascaler-0.0.1.tgz
     version: 0.0.1
-generated: "2026-10-23T20:08:44.651372209Z"
+generated: "2026-10-24T13:01:30.268302684Z"
