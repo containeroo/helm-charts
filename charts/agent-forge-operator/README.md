@@ -3,8 +3,8 @@
 The [agent-forge-operator chart](https://github.com/containeroo/helm-charts/tree/master/charts/agent-forge-operator) provides a Helm chart as a first-class method of installation on Kubernetes.
 
 The chart installs the `VsphereAgent`, `VsphereAgentPool`, `OpenStackAgent`, and
-`OpenStackAgentPool` CRDs from the chart `crds/` directory. Version 1.3.1 uses
-operator image `v1.3.1` and includes OpenStack provider permissions. Existing
+`OpenStackAgentPool` CRDs from the chart `crds/` directory. Version 1.3.2 uses
+operator image `v1.3.2` and includes OpenStack provider permissions. Existing
 `crdRoles` names are preserved; those roles now cover both providers.
 
 ## Installation
@@ -77,6 +77,29 @@ The following table lists the configurable parameters of the agent-forge-operato
 ## CRD Upgrades
 
 Helm installs CRDs from the chart `crds/` directory on first install, but does not upgrade or delete CRDs during normal chart upgrades. When using the Commodore component, CRDs are rendered into the catalog and managed by Argo CD together with the operator resources.
+
+## Upgrading to 1.3.2
+
+This patch fixes `DiscoveryImageChangedBeforeUpload`: the operator hashes and
+uploads the same downloaded ISO snapshot. Workers stuck before discovery-volume
+or instance creation recover automatically, preserving their existing port and OS
+volume. Shared image references and restart recovery are respected; discovery
+media on running workers is never replaced. CRDs, RBAC, and Helm values are
+unchanged from 1.3.1.
+
+```shell
+helm repo update containeroo
+helm upgrade agent-forge-operator containeroo/agent-forge-operator \
+  --namespace agent-forge-operator-system --version 1.3.2 \
+  --reuse-values --set-string image.tag=v1.3.2
+```
+
+Use your existing release name and namespace. After upgrading, affected workers
+may briefly report `RefreshingDiscoveryImage` while the obsolete cache reference
+is released. No worker deletion, status reset, or OS volume recreation is needed.
+If cleanup fails, the condition message reports the error and recovery resumes
+on a later reconciliation. `DiscoveryImageRefreshBlocked` indicates provisioning
+has advanced beyond safe image refresh; do not bypass that guard.
 
 ## Upgrading to 1.3.1
 
