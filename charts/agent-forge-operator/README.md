@@ -3,8 +3,8 @@
 The [agent-forge-operator chart](https://github.com/containeroo/helm-charts/tree/master/charts/agent-forge-operator) provides a Helm chart as a first-class method of installation on Kubernetes.
 
 The chart installs the `VsphereAgent`, `VsphereAgentPool`, `OpenStackAgent`, and
-`OpenStackAgentPool` CRDs from the chart `crds/` directory. Version 1.3.0 uses
-operator image `v1.3.0` and includes OpenStack provider permissions. Existing
+`OpenStackAgentPool` CRDs from the chart `crds/` directory. Version 1.3.1 uses
+operator image `v1.3.1` and includes OpenStack provider permissions. Existing
 `crdRoles` names are preserved; those roles now cover both providers.
 
 ## Installation
@@ -77,6 +77,40 @@ The following table lists the configurable parameters of the agent-forge-operato
 ## CRD Upgrades
 
 Helm installs CRDs from the chart `crds/` directory on first install, but does not upgrade or delete CRDs during normal chart upgrades. When using the Commodore component, CRDs are rendered into the catalog and managed by Argo CD together with the operator resources.
+
+## Upgrading to 1.3.1
+
+This patch adds safe OpenStack diagnostics in worker condition messages and logs,
+and explicit HTTP support through the credentials Secret. CRDs and RBAC are
+unchanged from 1.3.0. If upgrading from an earlier version, apply the release CRDs
+first as described below.
+
+```shell
+helm repo update containeroo
+helm upgrade agent-forge-operator containeroo/agent-forge-operator \
+  --namespace agent-forge-operator-system --version 1.3.1 \
+  --reuse-values --set-string image.tag=v1.3.1
+```
+
+Use your existing release name and namespace. The explicit image tag overrides
+any old tag retained by `--reuse-values`. For an HTTP-only OpenStack deployment,
+opt in on its existing credentials Secret (use your own namespace and Secret name):
+
+```shell
+kubectl -n example-cluster patch secret example-openstack-credentials \
+  --type=merge -p '{"stringData":{"allow-insecure-http":"true"}}'
+```
+
+Keep `auth-url` set to the scheme actually served by Keystone. This opt-in permits
+HTTP for authentication and service catalog endpoints; credentials and tokens
+travel without TLS protection. HTTPS remains the default, and HTTPS certificate
+verification is always enabled. The Secret change takes effect on existing workers
+without replacing them. The chart does not manage credentials or transport policy.
+
+Read `.status.conditions[].message` on the `OpenStackAgent` for the failed service,
+operation, safe category, HTTP status, and validated request ID where available.
+Raw errors, response bodies, endpoints, and credentials remain excluded. See the
+[OpenStack troubleshooting guide](https://github.com/containeroo/agent-forge-operator/blob/v1.3.1/docs/openstack.md#troubleshooting-and-recovery).
 
 ## Upgrading to 1.3.0
 
