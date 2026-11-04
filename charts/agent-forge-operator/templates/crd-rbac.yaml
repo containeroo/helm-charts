@@ -11,14 +11,18 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools
+  - openstackagentpools
   - vsphereagents
+  - openstackagents
   verbs:
   - '*'
 - apiGroups:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools/status
+  - openstackagentpools/status
   - vsphereagents/status
+  - openstackagents/status
   verbs:
   - get
 ---
@@ -33,6 +37,7 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools
+  - openstackagentpools
   verbs:
   - create
   - delete
@@ -45,12 +50,14 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools/status
+  - openstackagentpools/status
   verbs:
   - get
 - apiGroups:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagents
+  - openstackagents
   verbs:
   - get
   - list
@@ -59,6 +66,7 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagents/status
+  - openstackagents/status
   verbs:
   - get
 ---
@@ -73,7 +81,9 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools
+  - openstackagentpools
   - vsphereagents
+  - openstackagents
   verbs:
   - get
   - list
@@ -82,7 +92,9 @@ rules:
   - agent-forge.containeroo.ch
   resources:
   - vsphereagentpools/status
+  - openstackagentpools/status
   - vsphereagents/status
+  - openstackagents/status
   verbs:
   - get
 {{- end }}

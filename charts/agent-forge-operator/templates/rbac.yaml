@@ -10,6 +10,15 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
   - events
   verbs:
   - create
@@ -23,15 +32,21 @@ rules:
 - apiGroups:
   - agent-forge.containeroo.ch
   resources:
-  - vsphereagentpools
+  - openstackagentpools
+  - openstackagents
   verbs:
+  - create
+  - delete
   - get
   - list
   - patch
+  - update
   - watch
 - apiGroups:
   - agent-forge.containeroo.ch
   resources:
+  - openstackagentpools/finalizers
+  - openstackagents/finalizers
   - vsphereagentpools/finalizers
   - vsphereagents/finalizers
   verbs:
@@ -39,12 +54,23 @@ rules:
 - apiGroups:
   - agent-forge.containeroo.ch
   resources:
+  - openstackagentpools/status
+  - openstackagents/status
   - vsphereagentpools/status
   - vsphereagents/status
   verbs:
   - get
   - patch
   - update
+- apiGroups:
+  - agent-forge.containeroo.ch
+  resources:
+  - vsphereagentpools
+  verbs:
+  - get
+  - list
+  - patch
+  - watch
 - apiGroups:
   - agent-forge.containeroo.ch
   resources:

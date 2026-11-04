@@ -1,2 +1,6 @@
 Check out the upstream documentation for more information:
 https://github.com/containeroo/agent-forge-operator
+
+When upgrading from an older version, apply the release CRDs before upgrading
+this controller. Helm does not update CRDs during helm upgrade:
+  kubectl apply --server-side -f https://github.com/containeroo/agent-forge-operator/releases/download/{{ .Chart.AppVersion }}/crds.yaml

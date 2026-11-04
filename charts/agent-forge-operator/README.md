@@ -2,7 +2,10 @@
 
 The [agent-forge-operator chart](https://github.com/containeroo/helm-charts/tree/master/charts/agent-forge-operator) provides a Helm chart as a first-class method of installation on Kubernetes.
 
-The chart installs the `VsphereAgent` and `VsphereAgentPool` CRDs from the chart `crds/` directory.
+The chart installs the `VsphereAgent`, `VsphereAgentPool`, `OpenStackAgent`, and
+`OpenStackAgentPool` CRDs from the chart `crds/` directory. Version 1.3.0 uses
+operator image `v1.3.0` and includes OpenStack provider permissions. Existing
+`crdRoles` names are preserved; those roles now cover both providers.
 
 ## Installation
 
@@ -74,6 +77,34 @@ The following table lists the configurable parameters of the agent-forge-operato
 ## CRD Upgrades
 
 Helm installs CRDs from the chart `crds/` directory on first install, but does not upgrade or delete CRDs during normal chart upgrades. When using the Commodore component, CRDs are rendered into the catalog and managed by Argo CD together with the operator resources.
+
+## Upgrading to 1.3.0
+
+Apply the release CRDs **before** upgrading the controller. Helm does not update
+CRDs from `crds/` on upgrade, so `helm upgrade` alone is insufficient when adding
+the OpenStack provider. The bundle includes updated vSphere schemas too.
+
+```shell
+kubectl apply --server-side -f https://github.com/containeroo/agent-forge-operator/releases/download/v1.3.0/crds.yaml
+helm repo update containeroo
+helm upgrade agent-forge-operator containeroo/agent-forge-operator \
+  --namespace agent-forge-operator-system --version 1.3.0 \
+  --reuse-values --set-string image.tag=v1.3.0
+```
+
+Use your existing Helm release name and namespace if they differ. The explicit
+image tag overrides any tag retained from previous values. If you use a custom
+registry, make image `v1.3.0` available there first. If `clusterRole.create=false`,
+update the externally managed role with the new OpenStack and cache permissions.
+The chart does not create or read OpenStack credentials. Supply a Secret in each
+pool namespace and configure `OpenStackAgentPool` separately.
+
+See the [OpenStack setup guide](https://github.com/containeroo/agent-forge-operator/blob/v1.3.0/docs/openstack.md)
+for authentication, examples, cleanup, and compatibility checks. OpenStack keeps
+the discovery ISO attached for the entire worker lifetime: OS boot index 0,
+ISO CD-ROM boot index 1. Validate firmware fallback and reboot behavior before
+production use. Retained ISO media can contain sensitive bootstrap material.
+The vSphere ISO ejection setting and existing Helm value names remain unchanged.
 
 ## Upgrading to 1.2.0
 

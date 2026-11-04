@@ -1,0 +1,392 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.23.0
+  name: openstackagentpools.agent-forge.containeroo.ch
+spec:
+  group: agent-forge.containeroo.ch
+  names:
+    kind: OpenStackAgentPool
+    listKind: OpenStackAgentPoolList
+    plural: openstackagentpools
+    shortNames:
+    - osap
+    singular: openstackagentpool
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.desiredReplicas
+      name: Desired
+      type: integer
+    - jsonPath: .status.readyReplicas
+      name: Ready
+      type: integer
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: OpenStackAgentPool provisions workers for one HyperShift Agent
+          NodePool.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: OpenStackAgentPoolSpec follows the same AgentMachine demand
+              as vSphere pools.
+            properties:
+              agent:
+                description: |-
+                  AgentBindingSpec describes how a discovered Assisted Installer Agent should
+                  be made consumable by the Hypershift Agent NodePool.
+                properties:
+                  approve:
+                    default: true
+                    description: |-
+                      Approve controls whether matching discovered Agents are automatically
+                      patched with spec.approved=true.
+                    type: boolean
+                  labels:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Labels are required on a discovered Agent before the Agent CAPI provider
+                      can bind it to an AgentMachine. These should match the NodePool
+                      spec.platform.agent.agentLabelSelector labels.
+                    maxProperties: 32
+                    minProperties: 1
+                    type: object
+                  role:
+                    default: worker
+                    description: |-
+                      Role is the Hypershift NodePool role label value to apply to discovered
+                      Agents. For worker pools this is normally "worker".
+                    maxLength: 63
+                    minLength: 1
+                    pattern: ^[A-Za-z0-9]([A-Za-z0-9_.-]*[A-Za-z0-9])?$
+                    type: string
+                required:
+                - labels
+                type: object
+              cleanupPolicy:
+                default: Delete
+                description: |-
+                  CleanupPolicy controls whether the operator deletes its managed external
+                  inventory when demand disappears or the VsphereAgentPool is deleted.
+                enum:
+                - Delete
+                - Retain
+                type: string
+              controlPlaneNamespace:
+                maxLength: 63
+                minLength: 1
+                type: string
+                x-kubernetes-validations:
+                - message: controlPlaneNamespace is immutable
+                  rule: self == oldSelf
+              discoveryTimeoutSeconds:
+                default: 1800
+                format: int32
+                minimum: 60
+                type: integer
+              hostedClusterRef:
+                description: |-
+                  LocalObjectReference identifies another object in the same namespace as the
+                  VsphereAgentPool.
+                properties:
+                  name:
+                    description: Name is the referenced object's metadata.name.
+                    maxLength: 253
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                required:
+                - name
+                type: object
+                x-kubernetes-validations:
+                - message: hostedClusterRef is immutable
+                  rule: self == oldSelf
+              infraEnvRef:
+                description: |-
+                  LocalObjectReference identifies another object in the same namespace as the
+                  VsphereAgentPool.
+                properties:
+                  name:
+                    description: Name is the referenced object's metadata.name.
+                    maxLength: 253
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                required:
+                - name
+                type: object
+                x-kubernetes-validations:
+                - message: infraEnvRef is immutable
+                  rule: self == oldSelf
+              nodePoolRef:
+                description: |-
+                  LocalObjectReference identifies another object in the same namespace as the
+                  VsphereAgentPool.
+                properties:
+                  name:
+                    description: Name is the referenced object's metadata.name.
+                    maxLength: 253
+                    minLength: 1
+                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                    type: string
+                required:
+                - name
+                type: object
+                x-kubernetes-validations:
+                - message: nodePoolRef is immutable
+                  rule: self == oldSelf
+              openstack:
+                description: |-
+                  OpenStackPlacementSpec selects one project and region. Credentials are read only
+                  from the referenced Secret; no process environment or clouds.yaml is consumed.
+                properties:
+                  apiTimeoutSeconds:
+                    default: 60
+                    format: int32
+                    maximum: 600
+                    minimum: 5
+                    type: integer
+                  availabilityZone:
+                    type: string
+                  credentialsSecretRef:
+                    description: |-
+                      LocalObjectReference identifies another object in the same namespace as the
+                      VsphereAgentPool.
+                    properties:
+                      name:
+                        description: Name is the referenced object's metadata.name.
+                        maxLength: 253
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  dhcpEnabled:
+                    description: |-
+                      DHCPEnabled optionally requires the selected subnet to have this DHCP
+                      setting. The shared subnet is validated, never mutated by the operator.
+                    type: boolean
+                  flavorID:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                  flavorName:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                  networkID:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                  networkName:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                  portSecurityEnabled:
+                    default: true
+                    type: boolean
+                  portTags:
+                    description: PortTags are applied in addition to ownership stored
+                      in the port description.
+                    items:
+                      type: string
+                    maxItems: 40
+                    type: array
+                  region:
+                    minLength: 1
+                    type: string
+                  securityGroupIDs:
+                    items:
+                      type: string
+                    type: array
+                  subnetID:
+                    description: |-
+                      SubnetID limits Neutron address allocation. DHCP is controlled by that subnet;
+                      the operator never changes a shared subnet's DHCP configuration.
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                required:
+                - credentialsSecretRef
+                - region
+                type: object
+                x-kubernetes-validations:
+                - message: dhcpEnabled requires subnetID
+                  rule: '!has(self.dhcpEnabled) || has(self.subnetID)'
+                - message: set exactly one of networkID or networkName
+                  rule: has(self.networkID) != has(self.networkName)
+                - message: set exactly one of flavorID or flavorName
+                  rule: has(self.flavorID) != has(self.flavorName)
+                - message: security groups require port security
+                  rule: '!has(self.portSecurityEnabled) || self.portSecurityEnabled
+                    || !has(self.securityGroupIDs) || size(self.securityGroupIDs)
+                    == 0'
+              template:
+                description: OpenStackTemplateSpec describes Cinder storage and Nova
+                  block device buses.
+                properties:
+                  discoveryDiskBus:
+                    default: ide
+                    enum:
+                    - ide
+                    - scsi
+                    - sata
+                    type: string
+                  discoveryVolumeMinGiB:
+                    default: 2
+                    description: DiscoveryVolumeMinGiB is a floor; actual ISO size
+                      is always rounded up.
+                    format: int32
+                    maximum: 65536
+                    minimum: 1
+                    type: integer
+                  discoveryVolumeType:
+                    type: string
+                  diskGiB:
+                    default: 120
+                    format: int32
+                    maximum: 65536
+                    minimum: 20
+                    type: integer
+                  installationDisk:
+                    default: /dev/vda
+                    description: |-
+                      InstallationDisk is an explicit Assisted Installer inventory disk path.
+                      It must match the OS volume's serial and must never identify a CD-ROM.
+                    pattern: ^/dev/[a-zA-Z0-9/_-]+$
+                    type: string
+                  osDiskBus:
+                    default: virtio
+                    enum:
+                    - virtio
+                    - scsi
+                    - sata
+                    - ide
+                    type: string
+                  osVolumePolicy:
+                    default: Delete
+                    description: |-
+                      OSVolumePolicy retains only the OS volume when set to Retain. The instance,
+                      discovery volume and port are still deleted under cleanupPolicy Delete.
+                    enum:
+                    - Delete
+                    - Retain
+                    type: string
+                  volumeAvailabilityZone:
+                    type: string
+                  volumeMetadata:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  volumeType:
+                    type: string
+                type: object
+            required:
+            - agent
+            - controlPlaneNamespace
+            - hostedClusterRef
+            - infraEnvRef
+            - nodePoolRef
+            - openstack
+            - template
+            type: object
+          status:
+            description: |-
+              OpenStackAgentPoolStatus reports demand without inferring destructive scale-down
+              from replica counts. Only disappearance of the original CAPI demand authorizes it.
+            properties:
+              conditions:
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              desiredReplicas:
+                format: int32
+                type: integer
+              observedGeneration:
+                format: int64
+                type: integer
+              readyReplicas:
+                format: int32
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
