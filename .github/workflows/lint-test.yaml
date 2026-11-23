@@ -14,17 +14,17 @@ jobs:
 
       - name: Run chart-testing (lint)
         id: lint
-        uses: helm/chart-testing-action@v2.9.0
+        uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
         with:
           command: lint
           config: ct.yaml
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.15.2
+        uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376 # v1.15.2
         if: steps.lint.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@v2.9.0
+        uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
         with:
           command: install
           config: ct.yaml

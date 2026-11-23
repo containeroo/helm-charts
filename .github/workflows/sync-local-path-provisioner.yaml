@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
       - name: Install yq
-        uses: mikefarah/yq@v4
+        uses: mikefarah/yq@f2944b823f84906a127dbd29e4c2a3e60c4e550e # v4
 
       - name: Sync chart from upstream
         run: ./.github/scripts/sync-local-path-provisioner.sh
@@ -35,7 +35,7 @@ jobs:
 
       - name: Create pull request
         if: steps.changes.outputs.has_changes == 'true'
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8
         with:
           commit-message: "chore: sync local-path-provisioner chart"
           title: "chore: sync local-path-provisioner chart"
